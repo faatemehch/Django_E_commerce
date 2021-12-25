@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for product in object_list %}
+    {{ product.title }}
+    <br>
+    {{ product.short_description }}
+    <br>
+    {{ product.pk }}
+    <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+{% endfor %}
+</body>
+</html>

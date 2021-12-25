@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 
 
@@ -47,6 +48,9 @@ class Product( models.Model ):
     class Meta:
         verbose_name = 'Product'
         verbose_name_plural = 'Product List'
+
+    def get_absolute_url(self):
+        return reverse( 'product_module:product-detail', args=[self.slug] )
 
     def save(self, *args, **kwargs):
         self.slug = slugify( self.title )
