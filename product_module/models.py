@@ -19,7 +19,7 @@ class ProductDetail( models.Model ):
     price = models.FloatField( default=0, verbose_name='product price' )
     discount_price = models.FloatField( verbose_name='product discount price',
                                         help_text='discount price for a product', null=True, blank=True )
-    # image = models.ImageField( verbose_name='product image' )
+    image = models.ImageField( verbose_name='product image', upload_to='products_image/', null=True, blank=True )
     is_active = models.BooleanField( default=False, verbose_name='product activation' )
     quantity = models.IntegerField( verbose_name='product quantity', help_text='number of current product' )
     color = models.CharField( max_length=100, verbose_name='product color' )
