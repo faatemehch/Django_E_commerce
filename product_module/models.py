@@ -42,6 +42,7 @@ class Product( models.Model ):
     categories = models.ManyToManyField( Category, verbose_name='product category',
                                          db_index=True,
                                          null=True, blank=True )
+    sell_count = models.IntegerField( default=0, null=True, blank=True, help_text='Number of product sales' )
 
     class Meta:
         verbose_name = 'Product'
