@@ -36,6 +36,8 @@ class ProductDetail( models.Model ):
 
 class Product( models.Model ):
     title = models.CharField( max_length=300, verbose_name='product title', db_index=True )
+    main_image = models.ImageField( verbose_name='main image', help_text='main image of the current product', null=True,
+                                    blank=True )
     short_description = models.CharField( max_length=500, verbose_name='product short description' )
     description = models.TextField( verbose_name='product description' )
     added_date = models.DateTimeField( auto_now_add=True, verbose_name='product added date' )

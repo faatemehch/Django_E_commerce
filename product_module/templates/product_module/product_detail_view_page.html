@@ -1,18 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-{{ object.title }}    <br>
-{{ object.short_description }}    <br>
-{{ object.description }}
-<hr>
-{% for detail in object.productdetail_set.all %}
-    {{ detail.price }}
-    {{ detail.color }}
-    <br>
-{% endfor %}
-</body>
-</html>
+{% extends 'shared/layout.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <div class="container">
+        {{ object.title }}
+    </div>
+{% endblock %}
