@@ -97,22 +97,21 @@
                     </button>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#">active products</a>
-                        <a class="dropdown-item" href="#">new products</a>
+                        <a class="dropdown-item" href="{% url 'product_module:new-product-list' %}">new products</a>
                         <a class="dropdown-item" href="#">most expensive</a>
                         <a class="dropdown-item" href="#">less price</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">no filter</a>
+                        <a class="dropdown-item" href="{% url 'product_module:product-list' %}">no filter</a>
                     </div>
                 </div>
 
                 <!-- branding -->
                 <ul class="list-group mt-3 text-center">
                     <li class="list-group-item active" aria-current="true">Brand</li>
-                    <li class="list-group-item"><a href="#">Apple</a></li>
-                    <li class="list-group-item"><a href="#">Sumsung</a></li>
-                    <li class="list-group-item"><a href="#">Shimami</a></li>
-                    <li class="list-group-item"><a href="#">PHP</a></li>
-                    <li class="list-group-item"><a href="#">Asus</a></li>
+                    {% for brand in brands %}
+                        {% include 'includes/products_brand_partial.html' with brand=brand %}
+{#                        <li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
+                    {% endfor %}
                 </ul>
             </div>
         </div>
