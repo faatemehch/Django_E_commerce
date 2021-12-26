@@ -1,3 +1,5 @@
+{% load static %}
+{% load render_partial %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,12 +13,12 @@
 </head>
 
 <body>
-{% include 'shared/header.html' %}
+{% render_partial 'home_module.views.header' %}
 
 {% block content %}{% endblock %}
 <!-- footer -->
 <hr>
-{% include 'shared/footer.html' %}
+{% render_partial 'home_module.views.footer' %}
 {% include 'shared/footer_references.html' %}
 </body>
 

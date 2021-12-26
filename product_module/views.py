@@ -32,3 +32,8 @@ class NewProductListView( ListView ):
 
     def get_queryset(self):
         return Product.objects.all().order_by( '-added_date' )
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data( **kwargs )
+        context['title'] = 'new products'
+        return context
