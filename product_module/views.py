@@ -22,3 +22,13 @@ class ProductDetailView( DetailView ):
         context = super().get_context_data( **kwargs )
         context['title'] = 'product detail'
         return context
+
+
+# show products from newest to oldest
+class NewProductListView( ListView ):
+    model = Product
+    template_name = 'product_module/product_list_page.html'
+    paginate_by = 6
+
+    def get_queryset(self):
+        return Product.objects.all().order_by( '-added_date' )

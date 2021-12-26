@@ -16,22 +16,7 @@
                 <!-- products -->
                 <div class="row" id="products-row">
                     {% for product in object_list %}
-                        <div class="card">
-                            <img class="product-img"
-                                 src="{{ product.main_image.url }}"
-                                 class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.title|title }}</h5>
-                                <p class="card-text short-description">{{ product.short_description }}</p>
-                                <div class="row product-btn">
-                                    <a href="#" class="btn btn-warning d-inline">Add To Favorite <i
-                                            class="fa fa-star"></i></a>
-                                    <a href="{{ product.get_absolute_url }}" class="btn btn-info d-inline">More Details
-                                        <i
-                                                class="fa fa-shopping-cart"></i></a>
-                                </div>
-                            </div>
-                        </div>
+                        {% include 'includes/products_list_partial.html' with product=product %}
                     {% endfor %}
                     <div class="card">
                         <img class="product-img"
