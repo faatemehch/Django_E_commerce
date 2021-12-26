@@ -3,6 +3,17 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 
+class Brand( models.Model ):
+    title = models.CharField( max_length=200 )
+
+    class Meta:
+        verbose_name = 'Product Brand'
+        verbose_name_plural = 'Product Brands List'
+
+    def __str__(self):
+        return self.title
+
+
 class Category( models.Model ):
     title = models.CharField( max_length=200 )
 
@@ -46,6 +57,7 @@ class Product( models.Model ):
                                          db_index=True,
                                          null=True, blank=True )
     sell_count = models.IntegerField( default=0, null=True, blank=True, help_text='Number of product sales' )
+    brand = models.ForeignKey( Brand, on_delete=models.CASCADE, db_index=True, null=True )
 
     class Meta:
         verbose_name = 'Product'
