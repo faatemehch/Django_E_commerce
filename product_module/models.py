@@ -12,6 +12,7 @@ class ProductManager( models.Manager ):
 
 class Brand( models.Model ):
     title = models.CharField( max_length=200 )
+    logo_brand = models.ImageField( null=True, blank=True, upload_to='brand_logo/' )
 
     class Meta:
         verbose_name = 'Product Brand'

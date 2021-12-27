@@ -4,7 +4,7 @@
 {% block content %}
     <div id="content-wrapper">
         <div class="column">
-            <img id=featured src="{{ object.productdetail_set.first.image.url }}">
+            <img id=featured src="{{ object.main_image.url }}">
             <div id="slide-wrapper">
                 <img id="slideLeft" class="arrow" src="{% static  'img/arrow-left.png' %}"
                      alt="{{ object.title }}">
@@ -25,8 +25,8 @@
             <h5>
                 <span class="text-primary">Category:</span> {{ object.category }} | <span
                     class="text-primary">Brand:</span>
-                {{ object.brand }}
-                <img id="logo-img" src="images/shoe1.jpg">
+                {{ object.brand.title }}
+                <img id="logo-img" src="{{ object.brand.logo_brand.url }}">
             </h5>
             <hr>
             <h3>From $89.99 to $100.99</h3>
