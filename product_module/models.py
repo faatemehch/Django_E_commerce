@@ -1,6 +1,13 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.db.models import Q
+
+
+class ProductManager( models.Manager ):
+    def get_product_by_filter(self, category_name=None, brand_name=None):
+        lookup = Q( category__title=category_name ) | Q( brand__title=brand_name )
+        return self.get_queryset().filter( lookup ).distinct()
 
 
 class Brand( models.Model ):
@@ -53,11 +60,12 @@ class Product( models.Model ):
     description = models.TextField( verbose_name='product description' )
     added_date = models.DateTimeField( auto_now_add=True, verbose_name='product added date' )
     slug = models.SlugField( unique=True, db_index=True, null=False, default='', blank=True )
-    categories = models.ManyToManyField( Category, verbose_name='product category',
-                                         db_index=True,
-                                         null=True, blank=True )
+    category = models.ForeignKey( Category, verbose_name='product category',
+                                  db_index=True, on_delete=models.CASCADE, null=True, blank=True )
     sell_count = models.IntegerField( default=0, null=True, blank=True, help_text='Number of product sales' )
     brand = models.ForeignKey( Brand, on_delete=models.CASCADE, db_index=True, null=True )
+
+    objects = ProductManager()
 
     class Meta:
         verbose_name = 'Product'

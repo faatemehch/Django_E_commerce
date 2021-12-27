@@ -1,7 +1,213 @@
 {% extends 'shared/layout.html' %}
+{% load static %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    <div class="container">
-        {{ object.title }}
+    <div id="content-wrapper">
+        <div class="column">
+            <img id=featured src="{{ object.productdetail_set.first.image.url }}">
+            <div id="slide-wrapper">
+                <img id="slideLeft" class="arrow" src="{% static  'img/arrow-left.png' %}"
+                     alt="{{ object.title }}">
+                <div id="slider">
+                    {% for detail in object.productdetail_set.all %}
+                        {% if detail.image %}
+                            <img class="thumbnail {% if forloop.counter == 1 %}active{% endif %}"
+                                 src="{{ detail.image.url }}">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <img id="slideRight" class="arrow" src="{% static 'img/arrow-right.png' %}">
+            </div>
+        </div>
+        <div class="column">
+            <h1 class="text-danger">{{ object.title|title }}</h1>
+            <hr>
+            <h5>
+                <span class="text-primary">Category:</span> {{ object.category }} | <span
+                    class="text-primary">Brand:</span>
+                {{ object.brand }}
+                <img id="logo-img" src="images/shoe1.jpg">
+            </h5>
+            <hr>
+            <h3>From $89.99 to $100.99</h3>
+            <form action="" id="add-to-cart-form">
+                <div class="row m-1">
+                    <div class="radio-item mr-3">
+                        <input type="radio" id="ritema" name="ritem" value="blue sky" required>
+                        <label for="ritema">blue sky</label>
+                    </div>
+                    <div class="radio-item mr-3">
+                        <input type="radio" id="ritemb" name="ritem" value="silver" required>
+                        <label for="ritemb">silver</label>
+                    </div>
+                    <div class="radio-item mr-3">
+                        <input type="radio" id="ritemb" name="ritem" value="green" required>
+                        <label for="ritemb">green</label>
+                    </div>
+                </div>
+                <div class="mt-3 mb-3" id="product-quantity"></div>
+                <button class="btn btn-block btn-outline-success">Add To Cart</button>
+            </form>
+        </div>
     </div>
+    <hr>
+    <!--product descriptions & comments & details -->
+    <div class="container">
+        <div class="row">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                       aria-controls="home" aria-selected="true">Description</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                       aria-controls="profile" aria-selected="false">Comments</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                    <p class="text-justify p-3 shadow mt-2">
+                        {{ object.description }}
+                    </p>
+
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row" id="comments">
+                        <!--user comments-->
+                        <div class="col-lg-5 col-md-5" id="user-comments">
+                            <div class="list-group">
+								<span href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">Kale</h4>
+									<hr class="bg-danger">
+									<p class="list-group-item-text">محصول بسیار با کیفیت و عالیه</p>
+								</span>
+                            </div>
+                            <div class="list-group">
+								<span href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">Alex</h4>
+									<hr class="bg-danger">
+									<p class="list-group-item-text">محصول بسیار با کیفیت و عالیه</p>
+								</span>
+                            </div>
+
+                            <div class="list-group">
+								<span href="#" class="list-group-item">
+									<h4 class="list-group-item-heading">Jack</h4>
+									<hr class="bg-danger">
+									<p class="list-group-item-text">محصول بسیار با کیفیت و عالیه</p>
+								</span>
+                            </div>
+                            <div class="col-md-6 offset-4 mt-1">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <!--end user comments-->
+                        <!--send comment-->
+                        <div class="col-lg-7 col-md-7">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleInputUsername">fullname: </label>
+                                    <input type="text" class="form-control" id="exampleInputUsername"
+                                           placeholder="نام و نام خانوادگی">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputEmail">email: </label>
+                                    <input type="email" class="form-control" id="exampleInputEmail" placeholder="ایمیل">
+                                </div>
+                                <label>message : </label>
+                                <textarea class="form-control" placeholder="متن پیام" id="comment-text-input" cols="80"
+                                          rows="7"></textarea>
+
+                                <button type="submit" class="btn btn-danger btn-block mt-1">send</button>
+                            </form>
+                        </div>
+                        <!-- ends end comment-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end product descriptions & comments & details-->
+    <hr>
+    <div class="container">
+        <div class="text-center">
+            <h1><small>Related Products</small></h1>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <img src="img/ugmonk-bag-1.jpg" style="width: 200px; height:200px" class="rounded mx-auto d-block"
+                         alt="...">
+                    <button class="btn btn-block btn-info">More Detail</button>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <img src="img/ugmonk-tshirt-1.jpg" style="width: 200px; height:200px"
+                         class="rounded mx-auto d-block" alt="...">
+                    <button class="btn btn-block btn-info">More Detail</button>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <img src="img/ugmonk-bag-3.jpg" style="width: 200px; height:200px" class="rounded mx-auto d-block"
+                         alt="...">
+                    <button class="btn btn-block btn-info">More Detail</button>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <img src="img/ugmonk-bag-2.jpg" style="width: 200px; height:200px" class="rounded mx-auto d-block"
+                         alt="...">
+                    <button class="btn btn-block btn-info">More Detail</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        // radio button change
+        $('input[type="radio"]').change(function (event) {
+            event.preventDefault();
+            var content = $("input[name='ritem']:checked").val();
+            $("#product-quantity").trigger('reset'); //reset the form
+            temp = '<label for="quantity">' + 'Quantity:' + '</label> <input class="form-control" type = "number" id = "quantity" name = "quantity" min = "1" max = "5" required> <br> <p>Price: $68.80(' + content + ')</p>'
+            $("#product-quantity").html(temp);
+        })
+
+        //////////////////////////////////////////////////////////////
+        let thumbnails = document.getElementsByClassName('thumbnail')
+        let activeImages = document.getElementsByClassName('active')
+        for (var i = 0; i < thumbnails.length; i++) {
+            thumbnails[i].addEventListener('mouseover', function () {
+                console.log(activeImages)
+                if (activeImages.length > 0) {
+                    activeImages[0].classList.remove('active')
+                }
+                this.classList.add('active')
+                document.getElementById('featured').src = this.src
+            })
+        }
+        let buttonRight = document.getElementById('slideRight');
+        let buttonLeft = document.getElementById('slideLeft');
+        buttonLeft.addEventListener('click', function () {
+            document.getElementById('slider').scrollLeft -= 180
+        })
+
+        buttonRight.addEventListener('click', function () {
+            document.getElementById('slider').scrollLeft += 180
+        })
+
+    </script>
 {% endblock %}

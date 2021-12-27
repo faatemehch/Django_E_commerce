@@ -8,6 +8,10 @@ class ProductListView( ListView ):
     template_name = 'product_module/product_list_page.html'
     paginate_by = 6
 
+    def get_queryset(self, brand_name=None):
+        print( self.request, self.kwargs, brand_name, self.request.GET )
+        return Product.objects.all()
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data( **kwargs )
         context['title'] = 'product list'
@@ -32,9 +36,6 @@ class NewProductListView( ListView ):
     template_name = 'product_module/product_list_page.html'
     paginate_by = 6
 
-    def get_queryset(self):
-        return Product.objects.all().order_by( '-added_date' )
-
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data( **kwargs )
         context['title'] = 'new products'
@@ -46,6 +47,7 @@ class ProductByBrand( ListView ):
     model = Product
     template_name = 'product_module/product_list_page.html'
     paginate_by = 6
+    ordering = ['id']
 
     def get_queryset(self, *, object_list=None, **kwargs):
         brand_name = self.kwargs.get( 'brand_name' )
@@ -56,4 +58,3 @@ class ProductByBrand( ListView ):
         context['title'] = 'products by brand'
         context['brands'] = Brand.objects.all()
         return context
-

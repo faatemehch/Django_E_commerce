@@ -108,9 +108,20 @@
                 <!-- branding -->
                 <ul class="list-group mt-3 text-center">
                     <li class="list-group-item active" aria-current="true">Brand</li>
+                    {#                    <form method="get" id="category-form">#}
+                    {#                        {% for brand in brands %}#}
+                    {#                            <li class="list-group-item">#}
+                    {#                                <label>{{ brand.title }}</label>#}
+                    {#                                <input class="checkbox" type="checkbox" name="{{ brand.title }}"#}
+                    {#                                       value="{{ brand.title }}">#}
+                    {#                            </li>#}
+                    {#                            <div>#}
+                    {#                            </div>#}
+                    {#                        {% endfor %}#}
+                    {#                    </form>#}
                     {% for brand in brands %}
                         {% include 'includes/products_brand_partial.html' with brand=brand %}
-{#                        <li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
+                        {#                        <li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
                     {% endfor %}
                 </ul>
             </div>
@@ -138,4 +149,5 @@
             </nav>
         </div>
     </div>
+    <!-- JS -->
 {% endblock %}
