@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.views.generic import ListView, DetailView
 from .models import Product, ProductDetail, Category, Brand
 from django.db.models import Min, Max
@@ -10,7 +11,6 @@ class ProductListView( ListView ):
     paginate_by = 6
 
     def get_queryset(self, brand_name=None):
-        print( self.request, self.kwargs, brand_name, self.request.GET )
         return Product.objects.all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -65,8 +65,12 @@ class ProductDetailView( DetailView ):
         return context
 
 
-def get_product_detail(request, product_id, detail_color):
+def get_product_detail(request):
+    print( 'request', request.GET )
+    product_id = request.GET.get( 'product_id' )
+    detail_color = request.GET.get( 'color' )
     product = Product.objects.filter( id=product_id ).first()
-    product_detail = product.productdetail_set.filter( color=detail_color )
-    product_detail = ProductDetail.objects.filter( product=product, color=detail_color )
-    context = {'product_detail': product_detail}
+    # product_detail = product.productdetail_set.filter( color=detail_color )
+    product_detail = ProductDetail.objects.filter( product=product, color=detail_color ).first()
+    context = {'price': product_detail.price}
+    return JsonResponse( context )
