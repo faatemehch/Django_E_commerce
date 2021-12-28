@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from .models import Product, ProductDetail, Category, Brand
+from django.db.models import Min, Max
 
 
 class ProductListView( ListView ):
@@ -16,17 +17,6 @@ class ProductListView( ListView ):
         context = super().get_context_data( **kwargs )
         context['title'] = 'product list'
         context['brands'] = Brand.objects.all()
-        return context
-
-
-class ProductDetailView( DetailView ):
-    model = Product
-    template_name = 'product_module/product_detail_view_page.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data( **kwargs )
-        context['title'] = 'product detail'
-
         return context
 
 
@@ -58,3 +48,25 @@ class ProductByBrand( ListView ):
         context['title'] = 'products by brand'
         context['brands'] = Brand.objects.all()
         return context
+
+
+class ProductDetailView( DetailView ):
+    model = Product
+    template_name = 'product_module/product_detail_view_page.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data( **kwargs )
+        context['title'] = 'product detail'
+        object = super( ProductDetailView, self ).get_object()
+        details = ProductDetail.objects.filter( product=object ).all()
+        # find min and max of prices
+        min_max_price = details.aggregate( Min( 'price' ), Max( 'price' ) )
+        context['price__min'], context['price__max'] = min_max_price.values()
+        return context
+
+
+def get_product_detail(request, product_id, detail_color):
+    product = Product.objects.filter( id=product_id ).first()
+    product_detail = product.productdetail_set.filter( color=detail_color )
+    product_detail = ProductDetail.objects.filter( product=product, color=detail_color )
+    context = {'product_detail': product_detail}
