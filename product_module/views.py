@@ -66,7 +66,7 @@ class ProductDetailView( DetailView ):
 
 
 def get_product_detail(request):
-    print( 'request', request.GET )
+    # print( 'request', request.GET )
     product_id = request.GET.get( 'product_id' )
     detail_color = request.GET.get( 'color' )
     product = Product.objects.filter( id=product_id ).first()
