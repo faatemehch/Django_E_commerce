@@ -9,12 +9,19 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarScroll">
         <ul class="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll" style="max-height: 100px;">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Login <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Register</a>
-            </li>
+            {% if request.user.ia_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_module:logout' %}">Logout<span
+                            class="sr-only"></span></a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_module:login' %}">Login<span class="sr-only"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_module:register' %}">Register</a>
+                </li>
+            {% endif %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
                    data-toggle="dropdown" aria-expanded="false">
@@ -27,7 +34,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">All Products</a></li>
+                    <li><a class="dropdown-item" href="{% url 'product_module:product-list' %}">All Products</a></li>
                 </ul>
             </li>
             <li class="nav-item">

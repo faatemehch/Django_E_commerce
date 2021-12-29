@@ -1,3 +1,8 @@
+body {
+    overflow: -moz-scrollbars-vertical;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
 .card {
     width: 16rem;
@@ -186,4 +191,19 @@ input[type='radio']:checked:after {
 
 #btn-login:hover {
     background-color: dodgerblue;
+}
+
+#div-form {
+    margin: 0 auto
+}
+
+.register-div > input {
+    display: block;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #e7f0fe;
+    height: 40px;
+    border: 1px solid gray;
+    /*padding: '$input-padding-y $ input-padding-x';*/
+ /*40 -some lines elided . . .*/
 }

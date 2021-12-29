@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import LoginForm
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 
 
@@ -29,3 +30,15 @@ def login_view(request):
 def logout_user(request):
     logout( request )
     return redirect( 'account_module:login' )
+
+
+def register_view(request):
+    register_form = UserCreationForm( request.POST )
+    context = {
+        'title': 'register',
+        'register_form': register_form
+    }
+    if register_form.is_valid():
+        register_form.save()
+        return redirect( 'account_module:login' )
+    return render( request, 'account_module/register_page.html' ,context)
