@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path( 'products/', include( 'product_module.urls', namespace='product_module' ) ),
+    path( 'accounts/', include( 'account_module.urls', namespace='account_module' ) ),
     path( 'admin/', admin.site.urls ),
 ]
 

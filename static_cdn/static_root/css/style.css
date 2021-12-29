@@ -178,3 +178,12 @@ input[type='radio']:checked:after {
 #user-comments {
     margin-top: 15px;
 }
+
+/*login*/
+#btn-login {
+    background-color: cornflowerblue;
+}
+
+#btn-login:hover {
+    background-color: dodgerblue;
+}
