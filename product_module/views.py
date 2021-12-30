@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import ListView, DetailView
-from .models import Product, ProductDetail, Category, Brand
+from .models import Product, ProductDetail, Category, Brand, ProductComment
 from django.db.models import Min, Max
+from .forms import CommentForm
 
 
 class ProductListView( ListView ):
@@ -53,16 +54,27 @@ class ProductByBrand( ListView ):
 class ProductDetailView( DetailView ):
     model = Product
     template_name = 'product_module/product_detail_view_page.html'
+    form_class = CommentForm
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data( **kwargs )
         context['title'] = 'product detail'
-        object = super( ProductDetailView, self ).get_object()
+        object = self.object
         details = ProductDetail.objects.filter( product=object ).all()
         # find min and max of prices
         min_max_price = details.aggregate( Min( 'price' ), Max( 'price' ) )
         context['price__min'], context['price__max'] = min_max_price.values()
+        context['comments'] = ProductComment.objects.filter( product=object )
+        context['comment_form'] = self.form_class( initial={'product': self.object} )
+        related_products = [i for i in Product.objects.filter( brand=object.brand ) if i != object]
+        context['related_products'] = related_products
         return context
+
+    def post(self, *args, **kwargs):
+        comment_form = self.form_class( self.request.POST )
+        if comment_form.is_valid():
+            comment_form.save()
+        return HttpResponseRedirect( self.request.path_info )
 
 
 def get_product_detail(request):

@@ -30,7 +30,7 @@
             </h5>
             <hr>
             <h3>From ${{ price__min }} to ${{ price__max }}</h3>
-            <form method="post" id="add-to-cart-form" >
+            <form method="post" id="add-to-cart-form">
                 {% csrf_token %}
                 <div class="row m-1">
                     {% for detail in object.productdetail_set.all %}
@@ -72,28 +72,20 @@
                     <div class="row" id="comments">
                         <!--user comments-->
                         <div class="col-lg-5 col-md-5" id="user-comments">
-                            <div class="list-group">
+                            {% for comment in comments %}
+                                <div class="list-group">
 								<span href="#" class="list-group-item">
-									<h4 class="list-group-item-heading">Kale</h4>
+									<h4 class="list-group-item-heading">{{ comment.fullname }}</h4>
 									<hr class="bg-danger">
-									<p class="list-group-item-text">محصول بسیار با کیفیت و عالیه</p>
+									<p class="list-group-item-text">
+                                        {{ comment.message }}
+                                        <br>
+                                        <small class="text-secondary date">{{ comment.created_date|date:'M,d Y' }}</small>
+                                    </p>
 								</span>
-                            </div>
-                            <div class="list-group">
-								<span href="#" class="list-group-item">
-									<h4 class="list-group-item-heading">Alex</h4>
-									<hr class="bg-danger">
-									<p class="list-group-item-text">محصول بسیار با کیفیت و عالیه</p>
-								</span>
-                            </div>
+                                </div>
+                            {% endfor %}
 
-                            <div class="list-group">
-								<span href="#" class="list-group-item">
-									<h4 class="list-group-item-heading">Jack</h4>
-									<hr class="bg-danger">
-									<p class="list-group-item-text">محصول بسیار با کیفیت و عالیه</p>
-								</span>
-                            </div>
                             <div class="col-md-6 offset-4 mt-1">
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination">
@@ -117,21 +109,20 @@
                         <!--end user comments-->
                         <!--send comment-->
                         <div class="col-lg-7 col-md-7">
-                            <form>
+                            <form method="post">
+                                {% csrf_token %}
                                 <div class="form-group">
                                     <label for="exampleInputUsername">fullname: </label>
-                                    <input type="text" class="form-control" id="exampleInputUsername"
-                                           placeholder="نام و نام خانوادگی">
+                                    {{ comment_form.fullname }}
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleInputEmail">email: </label>
-                                    <input type="email" class="form-control" id="exampleInputEmail" placeholder="ایمیل">
+                                    {{ comment_form.email }}
                                 </div>
                                 <label>message : </label>
-                                <textarea class="form-control" placeholder="متن پیام" id="comment-text-input" cols="80"
-                                          rows="7"></textarea>
-
+                                {{ comment_form.message }}
+                                {{ comment_form.product }}
                                 <button type="submit" class="btn btn-danger btn-block mt-1">send</button>
                             </form>
                         </div>
@@ -147,29 +138,17 @@
         <div class="text-center">
             <h1><small>Related Products</small></h1>
             <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <img src="{{ object.main_image.url }}" style="width: 200px; height:200px"
-                         class="rounded mx-auto d-block"
-                         alt="...">
-                    <button class="btn btn-block btn-info">More Detail</button>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <img src="{{ object.main_image.url }}" style="width: 200px; height:200px"
-                         class="rounded mx-auto d-block" alt="...">
-                    <button class="btn btn-block btn-info">More Detail</button>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <img src="{{ object.main_image.url }}" style="width: 200px; height:200px"
-                         class="rounded mx-auto d-block"
-                         alt="...">
-                    <button class="btn btn-block btn-info">More Detail</button>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <img src="{{ object.main_image.url }}" style="width: 200px; height:200px"
-                         class="rounded mx-auto d-block"
-                         alt="...">
-                    <button class="btn btn-block btn-info">More Detail</button>
-                </div>
+                {% for related_product in related_products %}
+                    <div class="col-lg-3 col-md-6">
+                        <img src="{{ related_product.main_image.url }}" style="width: 200px; height:200px"
+                             class="rounded mx-auto d-block"
+                             alt="{{ related_product.title }}">
+                        <h5>{{ related_product.title|title }}</h5>
+                        <a class="btn btn-block btn-info"
+                           href="{{ related_product.get_absolute_url }}">More
+                            Detail</a>
+                    </div>
+                {% endfor %}
             </div>
 
         </div>
