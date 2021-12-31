@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import ListView, DetailView
-from .models import Product, ProductDetail, Category, Brand, ProductComment
+from .models import Product, ProductDetail, Category, Brand, ProductComment, Visited_Ip_product
 from django.db.models import Min, Max
 from .forms import CommentForm
 
@@ -51,6 +51,15 @@ class ProductByBrand( ListView ):
         return context
 
 
+def get_ip(request):
+    address = request.META.get( 'HTTP_X_FORWARDED_FOR' )
+    if address:
+        ip = address.split( ',' )[-1].strip()
+    else:
+        ip = request.META.get( 'REMOTE_ADDR' )
+    return ip
+
+
 class ProductDetailView( DetailView ):
     model = Product
     template_name = 'product_module/product_detail_view_page.html'
@@ -68,6 +77,14 @@ class ProductDetailView( DetailView ):
         context['comment_form'] = self.form_class( initial={'product': self.object} )
         related_products = [i for i in Product.objects.filter( brand=object.brand ) if i != object]
         context['related_products'] = related_products
+
+        ip = get_ip( self.request )
+        visited_ip_product = Visited_Ip_product.objects.filter( product=self.object, user_ip=ip ).all()
+        if len( visited_ip_product ) == 0:
+            Visited_Ip_product.objects.create( product=self.object, user_ip=ip )
+            self.object.visited_count += 1
+            self.object.save()
+
         return context
 
     def post(self, *args, **kwargs):

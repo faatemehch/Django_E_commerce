@@ -65,6 +65,7 @@ class Product( models.Model ):
                                   db_index=True, on_delete=models.CASCADE, null=True, blank=True )
     sell_count = models.IntegerField( default=0, null=True, blank=True, help_text='Number of product sales' )
     brand = models.ForeignKey( Brand, on_delete=models.CASCADE, db_index=True, null=True )
+    visited_count = models.IntegerField( help_text='number of visited this product', default=0 )
 
     # objects = ProductManager()
 
@@ -97,3 +98,16 @@ class ProductComment( models.Model ):
 
     def __str__(self):
         return self.fullname
+
+
+# save visited ip addresses
+class Visited_Ip_product( models.Model ):
+    product = models.ForeignKey( Product, null=True, blank=True, on_delete=models.CASCADE )
+    user_ip = models.TextField( verbose_name='ip address', help_text='user ip address' )
+
+    def __str__(self):
+        return self.user_ip
+
+    class Meta:
+        verbose_name = 'ip address'
+        verbose_name_plural = 'users ip address'
