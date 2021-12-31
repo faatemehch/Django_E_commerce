@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate
 #  login user
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect( 'product_module:product-list' )
+        return redirect( 'home_module:home-view' )
     login_form = LoginForm( request.POST or None )
     context = {
         'title': 'login',
@@ -33,6 +33,8 @@ def logout_user(request):
 
 
 def register_view(request):
+    if request.user.is_authenticated:
+        return redirect( 'home_module:home-view' )
     register_form = UserCreationForm( request.POST )
     context = {
         'title': 'register',
@@ -41,4 +43,4 @@ def register_view(request):
     if register_form.is_valid():
         register_form.save()
         return redirect( 'account_module:login' )
-    return render( request, 'account_module/register_page.html' ,context)
+    return render( request, 'account_module/register_page.html', context )

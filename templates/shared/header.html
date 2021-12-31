@@ -2,21 +2,21 @@
     <span class="mb-0">E-Commerce</span>
 </nav>
 <nav class="navbar navbar-expand-lg navbar-light bg-light mt-2">
-    <a class="navbar-brand" href="#">Home</a>
+    <a class="navbar-brand" href="{% url 'home_module:home-view' %}">Home</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarScroll"
             aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarScroll">
         <ul class="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll" style="max-height: 100px;">
-            {% if request.user.ia_authenticated %}
+            {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account_module:logout' %}">Logout<span
                             class="sr-only"></span></a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_module:login' %}">Login<span class="sr-only"></span></a>
+                    <a class="nav-link" href="{% url 'account_module:login' %}">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account_module:register' %}">Register</a>
@@ -25,12 +25,17 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
                    data-toggle="dropdown" aria-expanded="false">
-                    products
+                    Brand
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                    <li><a class="dropdown-item" href="#">mobile</a></li>
-                    <li><a class="dropdown-item" href="#">laptop</a></li>
-                    <li><a class="dropdown-item" href="#">TV</a></li>
+                    {% for brand in brands %}
+                        <li>
+                            <a class="dropdown-item"
+                               href="{% url 'product_module:product-list-by-brand' brand.title %}">
+                                {{ brand.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
                     <li>
                         <hr class="dropdown-divider">
                     </li>
