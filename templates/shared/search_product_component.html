@@ -1,0 +1,5 @@
+<form class="d-flex" method="get" action="{% url 'product_module:search-products-list' %}">
+    <input class="form-control mr-2" type="search" placeholder="Search" aria-label="Search" name="q"
+           value="{{ request.GET.q }}" required>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>

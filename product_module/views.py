@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import ListView, DetailView
 from .models import Product, ProductDetail, Category, Brand, ProductComment, Visited_Ip_product
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Q
 from .forms import CommentForm
 
 
@@ -75,7 +75,7 @@ class ProductDetailView( DetailView ):
         context['price__min'], context['price__max'] = min_max_price.values()
         context['comments'] = ProductComment.objects.filter( product=object )
         context['comment_form'] = self.form_class( initial={'product': self.object} )
-        related_products = [i for i in Product.objects.filter( brand=object.brand ) if i != object]
+        related_products = [i for i in Product.objects.filter( brand=object.brand ).order_by( '?' ) if i != object]
         context['related_products'] = related_products
 
         ip = get_ip( self.request )
@@ -103,3 +103,16 @@ def get_product_detail(request):
     product_detail = ProductDetail.objects.filter( product=product, color=detail_color ).first()
     context = {'price': product_detail.price}
     return JsonResponse( context )
+
+
+def product_list_by_search(request):
+    query = request.GET['q']
+    context = {
+        'title': 'search products'
+    }
+    if query is not None:
+        lookup = Q( title__icontains=query ) | Q( brand__title__icontains=query ) | Q(
+            category__title__icontains=query )
+        search_products = Product.objects.filter( lookup ).distinct()
+        context['object_list'] = search_products
+        return render( request, 'product_module/product_list_page.html', context )
