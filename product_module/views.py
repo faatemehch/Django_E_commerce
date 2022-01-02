@@ -4,6 +4,8 @@ from django.views.generic import ListView, DetailView
 from .models import Product, ProductDetail, Category, Brand, ProductComment, Visited_Ip_product
 from django.db.models import Min, Max, Q
 from .forms import CommentForm
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.views.generic.list import MultipleObjectMixin
 
 
 class ProductListView( ListView ):
@@ -26,6 +28,9 @@ class NewProductListView( ListView ):
     model = Product
     template_name = 'product_module/product_list_page.html'
     paginate_by = 6
+
+    def get_queryset(self):
+        return Product.objects.all().order_by( '-added_date' )
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data( **kwargs )
@@ -60,23 +65,29 @@ def get_ip(request):
     return ip
 
 
-class ProductDetailView( DetailView ):
+class ProductDetailView( DetailView, MultipleObjectMixin ):
     model = Product
     template_name = 'product_module/product_detail_view_page.html'
     form_class = CommentForm
+    paginate_by = 2
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data( **kwargs )
-        context['title'] = 'product detail'
         object = self.object
+        comments = ProductComment.objects.filter( product=object )
+        context = super().get_context_data( object_list=comments, **kwargs )
+        context['title'] = 'product detail'
         details = ProductDetail.objects.filter( product=object ).all()
         # find min and max of prices
         min_max_price = details.aggregate( Min( 'price' ), Max( 'price' ) )
         context['price__min'], context['price__max'] = min_max_price.values()
-        context['comments'] = ProductComment.objects.filter( product=object )
+        comments = ProductComment.objects.filter( product=object )
         context['comment_form'] = self.form_class( initial={'product': self.object} )
         related_products = [i for i in Product.objects.filter( brand=object.brand ).order_by( '?' ) if i != object]
         context['related_products'] = related_products
+        paginator = Paginator( comments, 2 )
+        page_number = self.request.GET.get( 'page' )
+        page_obj = paginator.get_page( page_number )
+        context['page_obj'] = page_obj
 
         ip = get_ip( self.request )
         visited_ip_product = Visited_Ip_product.objects.filter( product=self.object, user_ip=ip ).all()
@@ -101,7 +112,7 @@ def get_product_detail(request):
     product = Product.objects.filter( id=product_id ).first()
     # product_detail = product.productdetail_set.filter( color=detail_color )
     product_detail = ProductDetail.objects.filter( product=product, color=detail_color ).first()
-    context = {'price': product_detail.price}
+    context = {'price': product_detail.price, 'discount_price': product_detail.discount_price}
     return JsonResponse( context )
 
 

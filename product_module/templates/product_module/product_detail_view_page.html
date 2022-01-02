@@ -72,7 +72,7 @@
                     <div class="row" id="comments">
                         <!--user comments-->
                         <div class="col-lg-5 col-md-5" id="user-comments">
-                            {% for comment in comments %}
+                            {% for comment in page_obj %}
                                 <div class="list-group">
 								<span href="#" class="list-group-item">
 									<h4 class="list-group-item-heading">{{ comment.fullname }}</h4>
@@ -94,9 +94,12 @@
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        {% for page in paginator.page_range %}
+                                            <li class="page-item"><a class="page-link"
+                                                                     href="?page={{ page }}">{{ page }}</a>
+                                            </li>
+                                        {% endfor %}
+
                                         <li class="page-item">
                                             <a class="page-link" href="#" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
@@ -168,8 +171,13 @@
                 data: {'product_id': {{ object.id }}, 'color': content},
                 success: function (response) {
                     $("#product-quantity").trigger('reset'); //reset div
-                    temp = '<label for="quantity">' + 'Quantity:' + '</label><input class="form-control" type="number" id="quantity" name="quantity" min = "1" max = "5" required="required"> <br> <p> Price: $' + response.price + '(' + content + ') </p>'
-                    $("#product-quantity").html(temp);
+                    if (response.discount_price) {
+                        temp = '<label for="quantity">' + 'Quantity:' + '</label><input class="form-control" type="number" id="quantity" name="quantity" min = "1" max = "5" required="required"> <br> <p> Price: <del> $' + response.price + ' </del> $' + response.discount_price + '(' + content + ') </p>'
+                        $("#product-quantity").html(temp);
+                    } else {
+                        temp = '<label for="quantity">' + 'Quantity:' + '</label><input class="form-control" type="number" id="quantity" name="quantity" min = "1" max = "5" required="required"> <br> <p> Price: $' + response.price + '(' + content + ') </p>'
+                        $("#product-quantity").html(temp);
+                    }
                 },
                 error: function (response) {
                     alert(response)

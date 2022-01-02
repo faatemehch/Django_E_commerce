@@ -15,7 +15,7 @@
             <div class="col-md-9 col-sm-12 col-lg-9">
                 <!-- products -->
                 <div class="row" id="products-row">
-                    {% for product in object_list %}
+                    {% for product in page_obj %}
                         {% include 'includes/products_list_partial.html' with product=product %}
                     {% endfor %}
                 </div>
@@ -65,15 +65,23 @@
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
+                        <a class="page-link" href="?page=1&q={{ q|urlencode }}"
+                           aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    {% for page in page_obj.paginator.page_range %}
+                        {% if page == page_obj.number %}
+                            <li class="page-item"><a class="page-link"
+                                                     href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
+                        {% elif page > page_obj.number|add:'-2' and page < page_obj.number|add:'2' %}
+                            <li class="page-item"><a class="page-link"
+                                                     href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
+                        {% endif %}
+                    {% endfor %}
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q|urlencode }}"
+                           aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -82,8 +90,4 @@
         </div>
     </div>
     <!-- JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript">
-        console.log($.ajax);
-    </script>
 {% endblock %}
