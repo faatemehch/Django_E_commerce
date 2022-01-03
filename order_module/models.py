@@ -13,8 +13,8 @@ class Order( models.Model ):
     coupon_code = models.ForeignKey( 'Coupon', null=True, on_delete=models.DO_NOTHING, blank=True )
 
     # complete order
-    name = models.CharField( max_length=50, null=True , blank=True)
-    family = models.CharField( max_length=50, null=True , blank=True)
+    name = models.CharField( max_length=50, null=True, blank=True )
+    family = models.CharField( max_length=50, null=True, blank=True )
     post_code = models.IntegerField( null=True, blank=True )
     phone_number = models.IntegerField( null=True, blank=True )
     province = models.ForeignKey( 'Province', on_delete=models.CASCADE, null=True, blank=True )
@@ -34,15 +34,15 @@ class OrderDetail( models.Model ):
     order = models.ForeignKey( Order, on_delete=models.CASCADE )
     product = models.ForeignKey( Product, on_delete=models.CASCADE )
     product_detail = models.ForeignKey( ProductDetail, on_delete=models.CASCADE )
-    price = models.IntegerField()
-    count = models.IntegerField()
+    price = models.IntegerField( null=True )
+    count = models.IntegerField( null=True )
 
     class Meta:
         verbose_name = 'product detail'
         verbose_name_plural = 'product detail lists'
 
     def __str__(self):
-        return self.product
+        return f'{self.product}'
 
 
 class Province( models.Model ):

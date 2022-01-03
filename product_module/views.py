@@ -56,6 +56,7 @@ class ProductByBrand( ListView ):
         return context
 
 
+# get user ip
 def get_ip(request):
     address = request.META.get( 'HTTP_X_FORWARDED_FOR' )
     if address:

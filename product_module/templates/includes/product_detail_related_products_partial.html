@@ -1,0 +1,9 @@
+<div class="col-lg-3 col-md-6">
+    <img src="{{ related_product.main_image.url }}" style="width: 200px; height:200px"
+         class="rounded mx-auto d-block"
+         alt="{{ related_product.title }}">
+    <h5>{{ related_product.title|title }}</h5>
+    <a class="btn btn-block btn-info"
+       href="{{ related_product.get_absolute_url }}">More
+        Detail</a>
+</div>

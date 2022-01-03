@@ -30,12 +30,13 @@
             </h5>
             <hr>
             <h3>From ${{ price__min }} to ${{ price__max }}</h3>
-            <form method="post" id="add-to-cart-form">
+            <form method="post" id="add-to-cart-form" action="{% url 'order_module:add-new-order' %}">
                 {% csrf_token %}
                 <div class="row m-1">
+                    <input type="hidden" name="product" value="{{ object.id }}">
                     {% for detail in object.productdetail_set.all %}
                         <div class="radio-item mr-3">
-                            <input type="radio" id="{{ detail.id }}" name="ritem" value="{{ detail.color }}"
+                            <input type="radio" id="{{ detail.id }}" name="product-color" value="{{ detail.color }}"
                                    required="required">
                             <label for="{{ detail.id }}">{{ detail.color }}</label>
                         </div>
@@ -143,15 +144,7 @@
             <h1><small>Related Products</small></h1>
             <div class="row">
                 {% for related_product in related_products %}
-                    <div class="col-lg-3 col-md-6">
-                        <img src="{{ related_product.main_image.url }}" style="width: 200px; height:200px"
-                             class="rounded mx-auto d-block"
-                             alt="{{ related_product.title }}">
-                        <h5>{{ related_product.title|title }}</h5>
-                        <a class="btn btn-block btn-info"
-                           href="{{ related_product.get_absolute_url }}">More
-                            Detail</a>
-                    </div>
+                    {% include 'includes/product_detail_related_products_partial.html' with related_product=related_product %}
                 {% endfor %}
             </div>
 
@@ -163,7 +156,7 @@
         console.log($.ajax)
         $('input[type="radio"]').change(function (event) {
             event.preventDefault();
-            var content = $("input[name='ritem']:checked").val();
+            var content = $("input[name='product-color']:checked").val();
             var url = "{% url 'product_module:product-detail-price' %}";
             $.ajax({
                 type: 'GET',
