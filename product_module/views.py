@@ -112,7 +112,8 @@ def get_product_detail(request):
     product = Product.objects.filter( id=product_id ).first()
     # product_detail = product.productdetail_set.filter( color=detail_color )
     product_detail = ProductDetail.objects.filter( product=product, color=detail_color ).first()
-    context = {'price': product_detail.price, 'discount_price': product_detail.discount_price}
+    context = {'price': product_detail.price, 'discount_price': product_detail.discount_price,
+               'quantity': product_detail.quantity}
     return JsonResponse( context )
 
 

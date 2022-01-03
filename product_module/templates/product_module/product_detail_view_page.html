@@ -42,7 +42,8 @@
                     {% endfor %}
                 </div>
                 <div class="mt-3 mb-3" id="product-quantity"></div>
-                <button class="btn btn-block btn-outline-success" type="submit">Add To Cart</button>
+                <button class="btn btn-block btn-outline-success" type="submit" id="add-to-cart-btn">Add To Cart
+                </button>
             </form>
         </div>
     </div>
@@ -172,11 +173,15 @@
                 success: function (response) {
                     $("#product-quantity").trigger('reset'); //reset div
                     if (response.discount_price) {
-                        temp = '<label for="quantity">' + 'Quantity:' + '</label><input class="form-control" type="number" id="quantity" name="quantity" min = "1" max = "5" required="required"> <br> <p> Price: <del> $' + response.price + ' </del> $' + response.discount_price + '(' + content + ') </p>'
+                        temp = '<label for="quantity">' + 'Quantity:' + '</label><input class="form-control" type="number" id="quantity" name="quantity" min = "1" max ="' + response.quantity + '" required="required"> <br> <p> Price: <del> $' + response.price + ' </del> $' + response.discount_price + '(' + content + ') </p>'
                         $("#product-quantity").html(temp);
                     } else {
-                        temp = '<label for="quantity">' + 'Quantity:' + '</label><input class="form-control" type="number" id="quantity" name="quantity" min = "1" max = "5" required="required"> <br> <p> Price: $' + response.price + '(' + content + ') </p>'
+                        temp = '<label for="quantity">' + 'Quantity:' + '</label><input class="form-control" type="number" id="quantity" name="quantity" min = "1" max = "' + response.quantity + '" required="required"> <br> <p> Price: $' + response.price + '(' + content + ') </p>'
                         $("#product-quantity").html(temp);
+                    }
+                    if (response.quantity <= 0) {
+                        $("#add-to-cart-btn").attr("disabled", true);
+                        alert('product does not exist')
                     }
                 },
                 error: function (response) {
