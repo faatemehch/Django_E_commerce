@@ -9,7 +9,9 @@
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
                     <td><img src="{{ order_detail.product_detail.image.url }}" style="width: 100px;height: 100px"></td>
-                    <td>{{ order_detail.product.title }}</td>
+                    <td>
+                        <a href="{{ order_detail.product.get_absolute_url }}">{{ order_detail.product.title }}</a>
+                    </td>
                     <td class="text-center">{{ order_detail.product_detail.color }} | Count: {{ order_detail.count }}
                         <br>
                         <a href="#"><i class="fa fa-plus" style="color:red;"></i></a>
@@ -42,6 +44,4 @@
             </div>
         </form>
     </div>
-
-
 {% endblock %}
