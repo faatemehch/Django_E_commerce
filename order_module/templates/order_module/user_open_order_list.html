@@ -31,6 +31,16 @@
             </tr>
             </tbody>
         </table>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group m-3 p-3">
+                <input type="text" class="form-control" placeholder="Coupon Code" aria-label=""
+                       aria-describedby="basic-addon1" required>
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-success" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
 
 
