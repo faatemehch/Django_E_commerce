@@ -29,9 +29,25 @@ def add_user_order(request):
                                                      count=order_form_data['quantity'] )
     else:
         order_detail.count += int( order_form_data['quantity'] )
-        if product_detail.discount_price:
-            order_detail.price = product_detail.discount_price
-        else:
-            order_detail.price = product_detail.price
-        order_detail.save()
+
+    if product_detail.discount_price:
+        order_detail.price = product_detail.discount_price
+    else:
+        order_detail.price = product_detail.price
+
+    product_detail.quantity -= int( order_form_data['quantity'] )
+    product_detail.save()
+    order_detail.save()
     return redirect( 'home_module:home-view' )
+
+
+@login_required
+def user_open_order(request):
+    # if user doesn't pay the order is open
+    context = {
+        'title': f'{request.user.username} open order'
+    }
+    open_order = Order.objects.filter( owner=request.user, is_paid=False).first()
+    context['open_order'] = open_order
+    return render(request, 'order_module/user_open_order_list.html', context)
+

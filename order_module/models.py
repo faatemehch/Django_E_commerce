@@ -22,6 +22,12 @@ class Order( models.Model ):
     address = models.TextField( null=True, blank=True )
     description = models.TextField( null=True, blank=True )
 
+    def get_total_price(self):
+        amount = 0
+        for detail in self.orderdetail_set.all():
+            amount += detail.price * detail.count
+        return amount
+
     class Meta:
         verbose_name = 'user order'
         verbose_name_plural = 'orders list'
