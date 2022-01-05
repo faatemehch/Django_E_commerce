@@ -33,15 +33,20 @@
             </tr>
             </tbody>
         </table>
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-group m-3 p-3">
-                <input type="text" class="form-control" placeholder="Coupon Code" aria-label=""
-                       aria-describedby="basic-addon1" required>
-                <div class="input-group-prepend">
-                    <button class="btn btn-outline-success" type="submit">Submit</button>
+        <div class="float-left m-2 p-2">
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-group m-3 p-3 shadow bg-light">
+                    <input type="text" class="form-control" placeholder="Coupon Code" aria-label=""
+                           aria-describedby="basic-addon1" required>
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-success" type="submit">Submit</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+    </div>
+    <div class="container text-center">
+        <button class="btn btn-outline-info btn-block">Continue</button>
     </div>
 {% endblock %}

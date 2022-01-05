@@ -14,6 +14,21 @@
                     <a class="nav-link" href="{% url 'account_module:logout' %}">Logout<span
                             class="sr-only"></span></a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                       data-toggle="dropdown" aria-expanded="false">
+                        Your Account
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+                        <li>
+                            <a class="dropdown-item"
+                               href="{% url 'order_module:user-open-order' %}">
+                                Your Open Order
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account_module:login' %}">Login</a>
@@ -41,9 +56,6 @@
                     </li>
                     <li><a class="dropdown-item" href="{% url 'product_module:product-list' %}">All Products</a></li>
                 </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled">Link</a>
             </li>
         </ul>
         {% include 'shared/search_product_component.html' %}
