@@ -124,8 +124,9 @@ def product_list_by_search(request):
         'title': 'search products'
     }
     if query is not None:
-        lookup = Q( title__icontains=query ) | Q( brand__title__icontains=query ) | Q(
-            category__title__icontains=query )
+        lookup = Q( title__icontains=query ) | \
+                 Q( brand__title__icontains=query ) | \
+                 Q( category__title__icontains=query )
         search_products = Product.objects.filter( lookup ).distinct()
-        context['object_list'] = search_products
+        context['page_obj'] = search_products
         return render( request, 'product_module/product_list_page.html', context )
