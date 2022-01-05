@@ -44,8 +44,8 @@ class OrderDetail( models.Model ):
     count = models.IntegerField( null=True )
 
     class Meta:
-        verbose_name = 'product detail'
-        verbose_name_plural = 'product detail lists'
+        verbose_name = 'order detail'
+        verbose_name_plural = 'order detail lists'
 
     def __str__(self):
         return f'{self.product}'

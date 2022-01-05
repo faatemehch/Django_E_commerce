@@ -47,7 +47,17 @@ def user_open_order(request):
     context = {
         'title': f'{request.user.username} open order'
     }
-    open_order = Order.objects.filter( owner=request.user, is_paid=False).first()
+    open_order = Order.objects.filter( owner=request.user, is_paid=False ).first()
+    if open_order is None:
+        return redirect( 'home_module:home-view' )
     context['open_order'] = open_order
-    return render(request, 'order_module/user_open_order_list.html', context)
+    return render( request, 'order_module/user_open_order_list.html', context )
 
+
+def delete_order_item(request, order_detail_id):
+    order_detail: OrderDetail = OrderDetail.objects.filter( id=order_detail_id ).first()
+    if order_detail is not None and not order_detail.order.is_paid:
+        order_detail.product_detail.quantity += order_detail.count
+        order_detail.product_detail.save()
+        order_detail.delete()
+    return redirect( 'order_module:user-open-order' )

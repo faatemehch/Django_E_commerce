@@ -20,9 +20,9 @@
                     <td>{{ order_detail.price }} </td>
                     <td>{% widthratio order_detail.price 1 order_detail.count %}</td>
                     <td>
-                        <button type="button" class="close text-center" data-dismiss="alert" aria-label="Close">
+                        <a href="{% url 'order_module:delete-order-item' order_detail.id %}" class="btn">
                             <i class="fa fa-trash-o" style="color:red;"></i>
-                        </button>
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
