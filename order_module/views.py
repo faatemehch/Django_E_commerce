@@ -61,3 +61,34 @@ def delete_order_item(request, order_detail_id):
         order_detail.product_detail.save()
         order_detail.delete()
     return redirect( 'order_module:user-open-order' )
+
+
+def decrease_item_counter(request, order_detail_id):
+    '''
+        decrease counter of an order detail
+    '''
+    order_detail: OrderDetail = OrderDetail.objects.filter( id=order_detail_id ).first()
+    if order_detail is not None and not order_detail.order.is_paid:
+        order_detail.product_detail.quantity += 1
+        order_detail.product_detail.save()
+        if order_detail.count == 1:
+            order_detail.delete()
+        else:
+            order_detail.count -= 1
+            order_detail.save()
+    return redirect( 'order_module:user-open-order' )
+
+
+def increase_item_counter(request, order_detail_id):
+    '''
+        decrease counter of an order detail
+    '''
+    order_detail: OrderDetail = OrderDetail.objects.filter( id=order_detail_id ).first()
+    if order_detail is not None and not order_detail.order.is_paid:
+        if order_detail.product_detail.quantity == 0:
+            return redirect( 'order_module:user-open-order' )
+        order_detail.product_detail.quantity -= 1
+        order_detail.product_detail.save()
+        order_detail.count += 1
+        order_detail.save()
+    return redirect( 'order_module:user-open-order' )

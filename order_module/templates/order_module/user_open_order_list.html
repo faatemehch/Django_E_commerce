@@ -13,9 +13,19 @@
                         <a href="{{ order_detail.product.get_absolute_url }}">{{ order_detail.product.title }}</a>
                     </td>
                     <td class="text-center">{{ order_detail.product_detail.color }} | Count: {{ order_detail.count }}
+                        |{{ order_detail.product_detail.quantity }}
                         <br>
-                        <a href="#"><i class="fa fa-plus" style="color:red;"></i></a>
-                        <a href="#"><i class="fa fa-minus" style="color:red;"></i></a>
+                        {% if order_detail.product_detail.quantity < 1 %}
+                            <a href="{% url 'order_module:increase-item-counter' order_detail.id %}"><i
+                                    class="fa fa-plus"
+                                    style="color:red; " disabled="disabled"></i></a>
+                        {% else %}
+                            <a href="{% url 'order_module:increase-item-counter' order_detail.id %}"><i
+                                    class="fa fa-plus"
+                                    style="color:red;"></i></a>
+                        {% endif %}
+                        <a href="{% url 'order_module:decrease-item-counter'  order_detail.id %}"><i class="fa fa-minus"
+                                                                                                     style="color:red;"></i></a>
                     </td>
                     <td>{{ order_detail.price }} </td>
                     <td>{% widthratio order_detail.price 1 order_detail.count %}</td>
