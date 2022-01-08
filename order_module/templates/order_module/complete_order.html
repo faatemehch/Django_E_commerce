@@ -1,3 +1,68 @@
 {% extends 'shared/layout.html' %}
 {% block title %}{{ title }}{% endblock %}
-{% block content %}{% endblock %}
+{% block content %}
+    <div class="container">
+        <h4 class="text-center text-warning m-4 p-2">Complete Form</h4>
+        <form method="post" data-cities-url="{% url 'order_module:load_cities' %}" id="completeForm" novalidate>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.name.label }}:</label>
+                    {{ complete_form.name }}
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.family.label }}:</label>
+                    {{ complete_form.family }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.post_code.label }}:</label>
+                    {{ complete_form.post_code }}
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.phone_number.label }}:</label>
+                    {{ complete_form.phone_number }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.province.label }}:</label>
+                    {{ complete_form.province }}
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.city.label }}:</label>
+                    {{ complete_form.city }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.address.label }}:</label>
+                    {{ complete_form.address }}
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label>{{ complete_form.description.label }}:</label>
+                    {{ complete_form.description }}
+                </div>
+            </div>
+            <button class="btn btn-warning btn-block">Checkout</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $("#province").change(function () {
+            var url = $("#completeForm").attr("data-cities-url");
+            var provinceId = $(this).val();
+            console.log(provinceId)
+            $.ajax({
+                url: url,
+                data: {
+                    'province': provinceId
+                },
+                success: function (data) {
+                    $("#city").html(data);
+                }
+            });
+        });
+    </script>
+{% endblock %}

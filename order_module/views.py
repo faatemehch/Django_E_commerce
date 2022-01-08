@@ -2,9 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from product_module.models import Product, ProductDetail
-from .models import Order, OrderDetail, Coupon
+from .models import Order, OrderDetail, Coupon, Province, City
 import random
 import string
+from .forms import CompleteForm
 
 
 def create_tracking_code():
@@ -54,6 +55,7 @@ def user_open_order(request):
     return render( request, 'order_module/user_open_order_list.html', context )
 
 
+@login_required
 def delete_order_item(request, order_detail_id):
     order_detail: OrderDetail = OrderDetail.objects.filter( id=order_detail_id ).first()
     if order_detail is not None and not order_detail.order.is_paid:
@@ -63,6 +65,7 @@ def delete_order_item(request, order_detail_id):
     return redirect( 'order_module:user-open-order' )
 
 
+@login_required
 def decrease_item_counter(request, order_detail_id):
     '''
         decrease counter of an order detail
@@ -79,6 +82,7 @@ def decrease_item_counter(request, order_detail_id):
     return redirect( 'order_module:user-open-order' )
 
 
+@login_required
 def increase_item_counter(request, order_detail_id):
     '''
         decrease counter of an order detail
@@ -94,6 +98,7 @@ def increase_item_counter(request, order_detail_id):
     return redirect( 'order_module:user-open-order' )
 
 
+@login_required
 def add_coupon_code(request):
     open_order: Order = Order.objects.filter( owner=request.user, is_paid=False ).first()
     if open_order is not None:
@@ -111,3 +116,20 @@ def add_coupon_code(request):
     else:
         context = {'message': 'something went wrong!'}
     return JsonResponse( context )
+
+
+@login_required
+def complete_order(request):
+    open_order: Order = Order.objects.filter( owner=request.user, is_paid=False ).first()
+    if open_order is None:
+        return redirect( 'home_module:home-view' )
+    complete_form = CompleteForm( request.POST or None )
+    context = {'complete_form': complete_form}
+    return render( request, 'order_module/complete_order.html', context )
+
+
+def get_cities(request, ):
+    print( 'province', request.GET.get( 'province' ) )
+    cities = City.objects.filter( province_id=request.GET.get( 'province' ) )
+    context = {'cities': cities}
+    return render( request, 'order_module/cities_dropdown.html', context )
