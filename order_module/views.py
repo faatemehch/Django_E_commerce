@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from product_module.models import Product, ProductDetail
-from .models import Order, OrderDetail
+from .models import Order, OrderDetail, Coupon
 import random
 import string
 
@@ -92,3 +92,22 @@ def increase_item_counter(request, order_detail_id):
         order_detail.count += 1
         order_detail.save()
     return redirect( 'order_module:user-open-order' )
+
+
+def add_coupon_code(request):
+    open_order: Order = Order.objects.filter( owner=request.user, is_paid=False ).first()
+    if open_order is not None:
+        if open_order.coupon_code is None:
+            coupon_form = request.POST['coupon']
+            coupon = Coupon.objects.filter( code=coupon_form ).first()
+            if coupon is not None:
+                open_order.coupon_code = coupon
+                open_order.save()
+                context = {'message': 'coupon code added successfully!', 'total': open_order.get_total_price()}
+            else:
+                context = {'message': 'coupon code not found!'}
+        else:
+            context = {'message': 'you used coupon code before!'}
+    else:
+        context = {'message': 'something went wrong!'}
+    return JsonResponse( context )

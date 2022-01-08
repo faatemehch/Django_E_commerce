@@ -13,7 +13,6 @@
                         <a href="{{ order_detail.product.get_absolute_url }}">{{ order_detail.product.title }}</a>
                     </td>
                     <td class="text-center">{{ order_detail.product_detail.color }} | Count: {{ order_detail.count }}
-                        |{{ order_detail.product_detail.quantity }}
                         <br>
                         {% if order_detail.product_detail.quantity < 1 %}
                             <a href="{% url 'order_module:increase-item-counter' order_detail.id %}"><i
@@ -39,18 +38,18 @@
             <tr>
                 <th scope="row">#</th>
                 <td colspan="2">Total Price</td>
-                <td>${{ open_order.get_total_price }}</td>
+                <td id="total-price">${{ open_order.get_total_price }}</td>
             </tr>
             </tbody>
         </table>
         <div class="float-left m-2 p-2">
-            <form method="post">
+            <form method="post" id="coupon_form">
                 {% csrf_token %}
                 <div class="input-group m-3 p-3 shadow bg-light">
-                    <input type="text" class="form-control" placeholder="Coupon Code" aria-label=""
+                    <input type="text" class="form-control" placeholder="Coupon Code" aria-label="" name="coupon"
                            aria-describedby="basic-addon1" required>
                     <div class="input-group-prepend">
-                        <button class="btn btn-outline-success" type="submit">Submit</button>
+                        <button class="btn btn-outline-success" type="submit" id="coupon-btn">Submit</button>
                     </div>
                 </div>
             </form>
@@ -59,4 +58,35 @@
     <div class="container text-center">
         <button class="btn btn-outline-info btn-block">Continue</button>
     </div>
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $('#coupon-btn').click(function (event) {
+            event.preventDefault();
+            var content = $("input[name='coupon']").val();
+            var url = "{% url 'order_module:add-coupon-code' %}";
+            $.ajax({
+                type: 'POST',
+                {#dataType: 'json',#}
+                url: url,
+                data: {
+                    'coupon': content,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'total': '{{ open_order.get_total_price }}',
+                },
+                success: function (response) {
+                    $("#coupon_form").trigger('reset'); //reset div
+                    if (response.total) {
+                        $("#total-price").html('$' + response.total);
+                    }
+                    alert(response.message)
+                }
+                ,
+                error: function (response) {
+                    alert(response)
+                }
+            });
+        });
+
+    </script>
 {% endblock %}

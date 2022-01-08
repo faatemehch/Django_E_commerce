@@ -26,6 +26,8 @@ class Order( models.Model ):
         amount = 0
         for detail in self.orderdetail_set.all():
             amount += detail.price * detail.count
+        if self.coupon_code is not None:
+            amount -= (amount * self.coupon_code.amount) / 100
         return amount
 
     class Meta:
