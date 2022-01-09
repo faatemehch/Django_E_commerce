@@ -15,6 +15,15 @@ class CompleteForm( forms.ModelForm ):
             'address',
             'description'
         )
+        exclude = (
+            'owner',
+            'is_paid',
+            'is_send',
+            'created_date',
+            'payment_date',
+            'tracking_code',
+            'coupon_code'
+        )
 
         widgets = {
             'name': forms.TextInput( attrs={'class': 'form-control mb-3'} ),

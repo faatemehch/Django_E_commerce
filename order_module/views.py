@@ -118,18 +118,32 @@ def add_coupon_code(request):
     return JsonResponse( context )
 
 
-@login_required
-def complete_order(request):
-    open_order: Order = Order.objects.filter( owner=request.user, is_paid=False ).first()
-    if open_order is None:
-        return redirect( 'home_module:home-view' )
-    complete_form = CompleteForm( request.POST or None )
-    context = {'complete_form': complete_form}
-    return render( request, 'order_module/complete_order.html', context )
-
-
 def get_cities(request, ):
-    print( 'province', request.GET.get( 'province' ) )
     cities = City.objects.filter( province_id=request.GET.get( 'province' ) )
     context = {'cities': cities}
     return render( request, 'order_module/cities_dropdown.html', context )
+
+
+@login_required
+def complete_order(request):
+    open_order: Order = Order.objects.get( owner=request.user, is_paid=False )
+    if open_order is None:
+        return redirect( 'home_module:home-view' )
+    context = {
+        'title': 'complete order'
+    }
+    complete_form = CompleteForm( request.POST or None )
+    if request.method == 'POST':
+        if complete_form.is_valid():
+            open_order.name = complete_form.cleaned_data.get( 'name' )
+            open_order.family = complete_form.cleaned_data.get( 'family' )
+            open_order.post_code = complete_form.cleaned_data.get( 'post_code' )
+            open_order.phone_number = complete_form.cleaned_data.get( 'phone_number' )
+            open_order.province = complete_form.cleaned_data.get( 'province' )
+            open_order.city = complete_form.cleaned_data.get( 'city' )
+            open_order.address = complete_form.cleaned_data.get( 'address' )
+            open_order.description = complete_form.cleaned_data.get( 'description' )
+            open_order.save()
+            return HttpResponseRedirect( request.path_info )
+    context['complete_form'] = complete_form
+    return render( request, 'order_module/complete_order.html', context )
