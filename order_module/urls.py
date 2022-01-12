@@ -6,6 +6,7 @@ app_name = 'order_module'
 urlpatterns = [
     path( 'add-user-order/', views.add_user_order, name='add-new-order' ),
     path( 'add-coupon-code/', views.add_coupon_code, name='add-coupon-code' ),
+    path( 'user-orders/', views.user_orders_view, name='user-orders' ),
     path( 'complete-order/', views.complete_order, name='complete-order' ),
     path( 'user-open-order/', views.user_open_order, name='user-open-order' ),
     path( 'delete_order_item/<order_detail_id>', views.delete_order_item, name='delete-order-item' ),

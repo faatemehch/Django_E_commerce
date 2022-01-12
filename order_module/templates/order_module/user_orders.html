@@ -1,0 +1,28 @@
+{% extends 'shared/layout.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <div class="p-3 m-5">
+        <table class="table table-striped">
+            <thead>
+            <tr class="text-center">
+                <th scope="col">#</th>
+                <th scope="col">Order</th>
+                <th scope="col">Price</th>
+                <th scope="col">Detail</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr class="text-center">
+                    <th scope="row" class="text-danger">{{ forloop.counter }}</th>
+                    <td class="text-secondary">{{ order.owner }}</td>
+                    <td class="text-success">{{ order.get_total_price }}</td>
+                    <td><a class="btn btn-primary text-light">Detail</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>
+{% endblock %}

@@ -147,3 +147,13 @@ def complete_order(request):
             return HttpResponseRedirect( request.path_info )
     context['complete_form'] = complete_form
     return render( request, 'order_module/complete_order.html', context )
+
+
+@login_required( login_url='account_module:login' )
+def user_orders_view(request):
+    user_orders = Order.objects.filter( owner=request.user )
+    context = {
+        'title': 'user orders',
+        'orders': user_orders
+    }
+    return render( request, 'order_module/user_orders.html', context )
