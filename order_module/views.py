@@ -157,3 +157,7 @@ def user_orders_view(request):
         'orders': user_orders
     }
     return render( request, 'order_module/user_orders.html', context )
+
+@login_required( login_url='account_module:login' )
+def user_order_detail(request):
+    pass

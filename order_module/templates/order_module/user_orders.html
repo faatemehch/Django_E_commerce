@@ -8,6 +8,8 @@
                 <th scope="col">#</th>
                 <th scope="col">Order</th>
                 <th scope="col">Price</th>
+                <th scope="col">Paid/unPaid</th>
+                <th scope="col">Send/unSend</th>
                 <th scope="col">Detail</th>
             </tr>
             </thead>
@@ -17,7 +19,21 @@
                     <th scope="row" class="text-danger">{{ forloop.counter }}</th>
                     <td class="text-secondary">{{ order.owner }}</td>
                     <td class="text-success">{{ order.get_total_price }}</td>
-                    <td><a class="btn btn-primary text-light">Detail</a></td>
+                    <td class="text-danger">
+                        {% if order.is_paid %}
+                            Paid
+                        {% else %}
+                            Not Paid
+                        {% endif %}
+                    </td>
+                    <td class="text-danger">
+                        {% if order.is_send %}
+                            Sent
+                        {% else %}
+                            Not Send
+                        {% endif %}
+                    </td>
+                    <td><a class="btn btn-primary text-light" href="#">Detail</a></td>
                 </tr>
             {% endfor %}
             </tbody>
