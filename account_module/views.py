@@ -5,6 +5,7 @@ from .forms import LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
+from django.views import View
 
 
 #  login user
@@ -44,3 +45,11 @@ def register_view(request):
         register_form.save()
         return redirect( 'account_module:login' )
     return render( request, 'account_module/register_page.html', context )
+
+
+class UserAccountView( View ):
+    def get(self, request):
+        context = {
+            'title': 'user Account'
+        }
+        return render( request, 'account_module/user_account.html', context )
