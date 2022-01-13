@@ -1,10 +1,9 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .forms import LoginForm
+from .forms import LoginForm, EditUserAccountModelForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
 from django.views import View
 
@@ -56,3 +55,16 @@ class UserAccountView( View, LoginRequiredMixin ):
         return render( request, 'account_module/user_account.html', context )
 
 
+
+@login_required( login_url='account_module:login' )
+def edit_user_info(request):
+    edit_form = EditUserAccountModelForm( data=request.POST or None, instance=request.user )
+    if request.method == 'POST':
+        if edit_form.is_valid():
+            edit_form.save()
+            return redirect( 'account_module:user-account' )
+    context = {
+        'title': 'user form',
+        'edit_form': edit_form
+    }
+    return render( request, 'account_module/user_edit_form.html', context )
