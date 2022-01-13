@@ -3,5 +3,78 @@
     {{ title }}
 {% endblock %}
 {% block content %}
+    <h5 class="text-center m-2 p-2 text-primary"> Your Order Detail</h5>
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr class="text-center table-warning">
+                <th scope="col">Order</th>
+                <th scope="col">FullName</th>
+                <th scope="col">Price</th>
+                <th scope="col">Is Paid</th>
+                <th scope="col">Is Send</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-center table">
+                <th>{{ order.tracking_code }}</th>
+                <td>{{ order.name }} {{ order.family }}</td>
+                <td>{{ order.get_total_price }}</td>
+                <td>{% if order.is_paid %} Paid {% else %} Not Yet {% endif %}</td>
+                <td>{% if order.is_send %} Sent {% else %} Not Yet {% endif %}</td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        <table class="table">
+            <tr class="text-center table-active">
+                <th scope="col">Address</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Post Code</th>
+            </tr>
+            <tr class="text-center">
+                <th scope="col">{{ order.address }}</th>
+                <th scope="col">{{ order.phone_number }}</th>
+                <th scope="col">{{ order.post_code }}</th>
+            </tr>
+        </table>
+        <hr>
+        <table class="table">
+            <thead>
+            <tr class="text-center table-info">
+                <th scope="col">#</th>
+                <th scope="col">product</th>
+                <th scope="col">Color</th>
+                <th scope="col">Count</th>
+                <th scope="col">Price</th>
+                <th scope="col">Total Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for detail in order.orderdetail_set.all %}
+                <tr class="text-center">
+                    <th>{{ forloop.counter }}</th>
+                    <th>{{ detail.product }}</th>
+                    <td>{{ detail.product_detail.color }}</td>
+                    <td>{{ detail.count }}</td>
+                    <td class="text-danger">
+                        {% if detail.product_detail.discount_price %}
+                            <del>{{ detail.product_detail.price }} $</del>
+                            {{ detail.product_detail.discount_price }} $
+                        {% else %}
+                            {{ detail.product_detail.price }} $
+                        {% endif %}
+                    </td>
+                    <td class="text-danger">
+                        {% if detail.product_detail.discount_price %}
+                            {% widthratio detail.product_detail.discount_price 1 detail.count %}
+                        {% else %}
+                            {% widthratio detail.product_detail.price 1 detail.count %}
+                        {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
+    </div>
 {% endblock %}
