@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Slider
-from product_module.models import Product, Brand
+from product_module.models import Product, Brand, Category
 
 
 def home_view(request):
@@ -19,5 +19,5 @@ def header(request):
 
 
 def footer(request):
-    context = {}
+    context = {'brands': Brand.objects.all(), 'categories': Category.objects.all()}
     return render( request, 'shared/footer.html', context )

@@ -1,23 +1,23 @@
 <footer class="text-light bg-dark py-5">
     <div class="row p-5">
         <div class="col-6 col-md">
-            <h5>Features</h5>
+            <h5>Brand</h5>
             <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="#">Cool stuff</a></li>
-                <li><a class="text-muted" href="#">Random feature</a></li>
-                <li><a class="text-muted" href="#">Team feature</a></li>
-                <li><a class="text-muted" href="#">Stuff for developers</a></li>
-                <li><a class="text-muted" href="#">Another one</a></li>
-                <li><a class="text-muted" href="#">Last time</a></li>
+                {% for brand in brands %}
+                    <li><a class="text-muted"
+                           href="{% url 'product_module:product-list-by-brand' brand_name=brand.title %}">{{ brand }}</a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
         <div class="col-6 col-md">
-            <h5>Resources</h5>
+            <h5>Categories</h5>
             <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="#">Resource</a></li>
-                <li><a class="text-muted" href="#">Resource name</a></li>
-                <li><a class="text-muted" href="#">Another resource</a></li>
-                <li><a class="text-muted" href="#">Final resource</a></li>
+                {% for category in categories %}
+                    <li><a class="text-muted"
+                           href="{% url 'product_module:product-list-by-category' category.title %}">{{ category }}</a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
         <div class="col-6 col-md">

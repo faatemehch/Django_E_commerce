@@ -56,6 +56,23 @@ class ProductByBrand( ListView ):
         return context
 
 
+class ProductByCategory( ListView ):
+    model = Product
+    template_name = 'product_module/product_list_page.html'
+    paginate_by = 6
+    ordering = ['id']
+
+    def get_queryset(self, *, object_list=None, **kwargs):
+        brand_name = self.kwargs.get( 'category_name' )
+        return Product.objects.filter( category__title=brand_name ).order_by( '-added_date' )
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data( **kwargs )
+        context['title'] = 'products by category'
+        context['brands'] = Brand.objects.all()
+        return context
+
+
 # get user ip
 def get_ip(request):
     address = request.META.get( 'HTTP_X_FORWARDED_FOR' )
