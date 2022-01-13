@@ -33,7 +33,8 @@
                             Not Send
                         {% endif %}
                     </td>
-                    <td><a class="btn btn-primary text-light" href="#">Detail</a></td>
+                    <td><a class="btn btn-primary text-light" href="{% url 'order_module:order-detail' order.id %}">Detail</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

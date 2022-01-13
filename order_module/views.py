@@ -158,6 +158,9 @@ def user_orders_view(request):
     }
     return render( request, 'order_module/user_orders.html', context )
 
+
 @login_required( login_url='account_module:login' )
-def user_order_detail(request):
-    pass
+def user_order_detail(request, order_id):
+    order = Order.objects.filter( id=order_id ).first()
+    context = {'title': 'order detail', 'order': order}
+    return render( request, 'order_module/order_detail.html', context )
