@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'account_module',
     'contact_module',
     'order_module',
+    'forgot_password_module'
 ]
 
 MIDDLEWARE = [
