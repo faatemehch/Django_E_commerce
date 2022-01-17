@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
-from product_module.models import Product, ProductDetail
-from .models import Order, OrderDetail, Coupon, Province, City
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, DetailView
+
+from product_module.models import Product
+from .models import Order, OrderDetail, Coupon, City
 import random
 import string
 from .forms import CompleteForm
@@ -43,17 +46,18 @@ def add_user_order(request):
     return redirect('home_module:home-view')
 
 
-@login_required
-def user_open_order(request):
-    # if user doesn't pay the order is open
-    context = {
-        'title': f'{request.user.username} open order'
-    }
-    open_order = Order.objects.filter(owner=request.user, is_paid=False).first()
-    if open_order is None:
-        return redirect('home_module:home-view')
-    context['open_order'] = open_order
-    return render(request, 'order_module/user_open_order_list.html', context)
+class UserOpenOrder(DetailView, LoginRequiredMixin):
+    model = Order
+    template_name = 'order_module/user_open_order_list.html'
+
+    def get_object(self, queryset=None):
+        open_order = get_object_or_404(Order, owner=self.request.user, is_paid=False)
+        return open_order
+
+    def get_context_data(self, **kwargs):
+        context = super(UserOpenOrder, self).get_context_data()
+        context['title'] = f'{self.request.user.username} open order'
+        return context
 
 
 @login_required
