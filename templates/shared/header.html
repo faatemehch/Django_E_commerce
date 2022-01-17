@@ -13,7 +13,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
                        data-toggle="dropdown" aria-expanded="false">
-                        {{request.user}} <i class="fa fa-user"></i>
+                        {{ request.user }} <i class="fa fa-user"></i>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                         <li>
@@ -62,6 +62,9 @@
                     </li>
                     <li><a class="dropdown-item" href="{% url 'product_module:product-list' %}">All Products</a></li>
                 </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'contact_module:contact-us' %}">Contact Us</a>
             </li>
         </ul>
         {% include 'shared/search_product_component.html' %}
