@@ -1,14 +1,13 @@
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
-
-from product_module.models import Product
 from .models import Order, OrderDetail, Coupon, City
+from product_module.models import Product
+from django.http import JsonResponse
+from .forms import CompleteForm
 import random
 import string
-from .forms import CompleteForm
 
 
 def create_tracking_code():
