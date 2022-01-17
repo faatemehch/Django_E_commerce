@@ -39,11 +39,10 @@ def add_user_order(request):
         order_detail.price = product_detail.discount_price
     else:
         order_detail.price = product_detail.price
-
     product_detail.quantity -= int(order_form_data['quantity'])
     product_detail.save()
     order_detail.save()
-    return redirect('home_module:home-view')
+    return redirect('order_module:user-open-order')
 
 
 class UserOpenOrder(DetailView, LoginRequiredMixin):
