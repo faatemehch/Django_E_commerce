@@ -3,8 +3,15 @@
 {% block content %}
     <h5 class="text-center text-primary">Edit You Information</h5>
     <div class="container">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            {% if  user.avatar %}
+                <img src="{{ user.avatar.url }}"/>
+                  <div class="col">
+                    {{ edit_form.avatar.label_tag }}
+                    {{ edit_form.avatar }}
+                </div>
+            {% endif %}
             <div class="row m-2">
                 <div class="col">
                     {{ edit_form.username.label_tag }}

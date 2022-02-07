@@ -57,7 +57,7 @@ class RegisterView(View):
             if user_exist:
                 register_form.add_error(email, 'email is not valid!')
             else:
-                new_user = User(email=email, password=password, gender=gender)
+                new_user = User(email=email, password=password, gender=gender, username=email)
                 new_user.set_password(password)
                 new_user.save()
                 return redirect(reverse('account_module:login'))
@@ -77,13 +77,16 @@ class UserAccountView(View, LoginRequiredMixin):
 
 @login_required(login_url='account_module:login')
 def edit_user_info(request):
-    edit_form = EditUserAccountModelForm(data=request.POST or None, instance=request.user)
     if request.method == 'POST':
+        edit_form = EditUserAccountModelForm(request.POST, request.FILES, instance=request.user)
         if edit_form.is_valid():
             edit_form.save()
             return redirect('account_module:user-account')
+    else:
+        edit_form = EditUserAccountModelForm(instance=request.user)
     context = {
         'title': 'user form',
-        'edit_form': edit_form
+        'edit_form': edit_form,
+        'user': User.objects.filter(username=request.user.username).first()
     }
     return render(request, 'account_module/user_edit_form.html', context)
