@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.loader import get_template
 from django.views.generic import ListView, DetailView
 from .models import Order, OrderDetail, Coupon, City
 from product_module.models import Product
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .forms import CompleteForm
+from xhtml2pdf import pisa
 import random
 import string
+import datetime
 
 
 def create_tracking_code():
@@ -17,6 +20,8 @@ def create_tracking_code():
 
 @login_required
 def add_user_order(request):
+    if request.method == 'GET':
+        return redirect('home_module:home-view')
     order_form_data = request.POST  # get form info (POST request)
     # get product order details
     product: Product = Product.objects.filter(id=order_form_data['product']).first()
@@ -167,3 +172,16 @@ def user_order_detail(request, order_id):
     order = Order.objects.filter(id=order_id).first()
     context = {'title': 'order detail', 'order': order}
     return render(request, 'order_module/order_detail.html', context)
+
+
+# export an order as a pdf
+def export_pdf_order(request, order_id):
+    response = HttpResponse(content_type='appllication/pdf')
+    order = Order.objects.filter(id=order_id).first()
+    response['content-Disposiotion'] = 'filename=order' + '.pdf'
+    template_path = 'order_module/html_to_pdf_order.html'
+    template = get_template(template_path)
+    context = {'order': order}
+    html = template.render(context)
+    pisa.CreatePDF(html, dest=response)
+    return response

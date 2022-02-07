@@ -87,7 +87,7 @@ AUTH_USER_MODEL = 'account_module.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -134,4 +134,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'media_root')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-

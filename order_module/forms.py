@@ -50,5 +50,5 @@ class CompleteForm( forms.ModelForm ):
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
 
-        elif self.instance.pk:
-            self.fields['city'].queryset = self.instance.province.city_set.order_by( 'city_name' )
+        # elif self.instance.pk:
+        #     self.fields['city'].queryset = self.instance.province.city_set.order_by( 'city_name' )

@@ -15,4 +15,5 @@ urlpatterns = [
     path('decrease_item_counter/<order_detail_id>', views.decrease_item_counter, name='decrease-item-counter'),
     path('increase_item_counter/<order_detail_id>', views.increase_item_counter, name='increase-item-counter'),
     path('ajax/load-cities/', views.get_cities, name='load_cities'),
+    path('export-pdf/<int:order_id>/', views.export_pdf_order, name='export-pdf-order')
 ]
