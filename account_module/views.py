@@ -1,14 +1,12 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.urls import reverse_lazy, reverse
+from account_module.models import User
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView
-
-from .forms import LoginForm, EditUserAccountModelForm
+from django.views.generic import View, CreateView
+from .forms import LoginForm, EditUserAccountModelForm, RegisterForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-from django.views import View
 
 
 #  login user
@@ -36,18 +34,37 @@ def logout_user(request):
     return redirect('account_module:login')
 
 
-def register_view(request):
-    if request.user.is_authenticated:
-        return redirect('home_module:home-view')
-    register_form = UserCreationForm(request.POST)
-    context = {
-        'title': 'register',
-        'register_form': register_form
-    }
-    if register_form.is_valid():
-        register_form.save()
-        return redirect('account_module:login')
-    return render(request, 'account_module/register_page.html', context)
+class RegisterView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home_module:home-view')
+        register_form = RegisterForm()
+        context = {
+            'register_form': register_form,
+            'title': 'register view'
+        }
+        return render(request, 'account_module/register_page.html', context)
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('home_module:home-view')
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            email = register_form.cleaned_data.get('email')
+            password = register_form.cleaned_data.get('password')
+            gender = register_form.cleaned_data.get('gender')
+            user_exist = User.objects.filter(email=email).exists()
+            if user_exist:
+                register_form.add_error(email, 'email is not valid!')
+            else:
+                new_user = User(email=email, password=password, gender=gender)
+                new_user.set_password(password)
+                new_user.save()
+                return redirect(reverse('account_module:login'))
+        context = {
+            'register_form': register_form
+        }
+        return render(request, 'account_module/register_page.html', context)
 
 
 class UserAccountView(View, LoginRequiredMixin):

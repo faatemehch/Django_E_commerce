@@ -7,7 +7,7 @@ class ContactUs( models.Model ):
     subject = models.CharField( max_length=300 )
     message_text = models.TextField()
     created_at = models.DateTimeField( auto_now_add=True )
-    is_read = models.BooleanField( default=False, null=True )
+    is_read = models.BooleanField( default=False )
     read_at = models.DateTimeField( auto_now=True )
     response = models.TextField()
 

@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from product_module.models import Product, ProductDetail
 
 
 class Order( models.Model ):
-    owner = models.ForeignKey( User, on_delete=models.CASCADE )
+    owner = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.CASCADE )
     is_paid = models.BooleanField( default=False, help_text='order paid or not' )
     is_send = models.BooleanField( default=False, help_text='order sent or not' )
     created_date = models.DateTimeField( help_text='created current user order', auto_now_add=True )

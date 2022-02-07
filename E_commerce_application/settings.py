@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # own app
+    # external apps
     'django_render_partial',
+    # internal apps
+    'account_module',
     'product_module',
     'home_module',
-    'account_module',
     'contact_module',
     'order_module',
     'forgot_password_module.apps.ForgotPasswordModuleConfig'
@@ -79,6 +81,8 @@ WSGI_APPLICATION = 'E_commerce_application.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+AUTH_USER_MODEL = 'account_module.User'
 
 DATABASES = {
     'default': {
@@ -130,3 +134,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'media_root')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
