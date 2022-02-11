@@ -14,14 +14,18 @@ class ProductListView(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        for key, value in self.request.GET.items():
-            print(key, value)
-        print('get items: ', list(self.request.GET.items()))
-        try:
-            return Product.objects.filter(is_active=True, is_delete=False,
-                                          brand__title__exact=self.request.GET.get('brand'))
-        except TypeError:
-            return Product.objects.filter(is_active=True, is_delete=False)
+        products = Product.objects.filter(is_active=True, is_delete=False)
+        brand = self.request.GET.get('brand')
+        category = self.request.GET.get('category')
+        if brand is not None:
+            products = products.filter(is_active=True, is_delete=False,
+                                       brand__title__exact=brand)
+
+        if category is not None:
+            products = products.filter(is_active=True, is_delete=False,
+                                       category__title__exact=category)
+
+        return products
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
