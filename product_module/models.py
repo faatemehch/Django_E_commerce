@@ -66,7 +66,8 @@ class Product(models.Model):
     sell_count = models.IntegerField(default=0, null=True, blank=True, help_text='Number of product sales')
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, db_index=True, null=True)
     visited_count = models.IntegerField(help_text='number of visited this product', default=0)
-
+    is_delete = models.BooleanField(default=False, null=True)
+    is_active = models.BooleanField(default=True, null=True)
     # objects = ProductManager()
 
     class Meta:

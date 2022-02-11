@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- branding -->
-                <ul class="list-group mt-3 text-center">
+                <ul class="brand list-group mt-3 text-center">
                     <li class="list-group-item active" aria-current="true">Brand</li>
                     {#                    <form method="get" id="category-form">#}
                     {#                        {% for brand in brands %}#}
@@ -52,7 +52,15 @@
                     {#                        {% endfor %}#}
                     {#                    </form>#}
                     {% for brand in brands %}
-                        {% include 'includes/products_brand_partial.html' with brand=brand %}
+                        {% include 'includes/products_brand_partial.html' with product=brand %}
+                        {#                        <li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
+                    {% endfor %}
+                </ul>
+
+                <ul class="dynamic_filter list-group mt-3 text-center">
+                    <li class="list-group-item active" aria-current="true">Category</li>
+                    {% for category in categories %}
+                        {% include 'includes/products_brand_partial.html' with product=category %}
                         {#                        <li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
                     {% endfor %}
                 </ul>
@@ -60,34 +68,45 @@
         </div>
     </div>
     <!-- pagination -->
-    <div class="container" id="product-pagination">
-        <div class="col-md-6 offset-4">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1&q={{ q|urlencode }}"
-                           aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    {% for page in page_obj.paginator.page_range %}
-                        {% if page == page_obj.number %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
-                        {% elif page > page_obj.number|add:'-2' and page < page_obj.number|add:'2' %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q|urlencode }}"
-                           aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+    {% if is_paginated %}
+        <div class="container" id="product-pagination">
+            <div class="col-md-6 offset-4">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1&q={{ q|urlencode }}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% for page in page_obj.paginator.page_range %}
+                            {% if page == page_obj.number %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
+                            {% elif page > page_obj.number|add:'-2' and page < page_obj.number|add:'2' %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q|urlencode }}"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-    </div>
+    {% endif %}
     <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $('.brand li').click(function () {
+            var brand_name = this.id
+            window.location.href = "?brand=" + brand_name
+        })
+
+
+    </script>
 {% endblock %}
