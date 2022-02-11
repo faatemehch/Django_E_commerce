@@ -8,7 +8,7 @@ from .forms import ContactUsForm
 class ContactUsView(FormView):
     template_name = 'contact_module/contact_us_page.html'
     form_class = ContactUsForm
-    success_url = reverse_lazy('contact_module:contact-us')
+    success_url = reverse_lazy('home_module:home-view')
 
     def form_valid(self, form):
         form.save()

@@ -1,42 +1,47 @@
 {% extends 'shared/layout.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    <h5 class="text-center text-primary mt-3">Your Order({{ request.user }})</h5>
-    <div class="container">
+    {% if object %}
+        <h5 class="text-center text-primary mt-3">Your Order({{ request.user }})</h5>
+        <div class="container">
 
-        <table class="table table-hover">
-            <tbody>
-            {% for order_detail in object.orderdetail_set.all %}
-                {% include 'includes/open_order_detail_component.html' with order_detail=order_detail %}
-            {% endfor %}
-            <tr>
-                <th scope="row">#</th>
-                <td colspan="2">Total Price</td>
-                <td id="total-price">${{ open_order.get_total_price }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="float-left m-2 p-2">
-                <form method="post" id="coupon_form">
-                    {% csrf_token %}
-                    <div class="input-group m-3 p-3 shadow bg-light">
-                        <input type="text" class="form-control" placeholder="Coupon Code" aria-label="" name="coupon"
-                               aria-describedby="basic-addon1" required>
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-success" type="submit" id="coupon-btn">Submit
-                            </button>
+            <table class="table table-hover">
+                <tbody>
+                {% for order_detail in object.orderdetail_set.all %}
+                    {% include 'includes/open_order_detail_component.html' with order_detail=order_detail %}
+                {% endfor %}
+                <tr>
+                    <th scope="row">#</th>
+                    <td colspan="2">Total Price</td>
+                    <td id="total-price">${{ open_order.get_total_price }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="float-left m-2 p-2">
+                    <form method="post" id="coupon_form">
+                        {% csrf_token %}
+                        <div class="input-group m-3 p-3 shadow bg-light">
+                            <input type="text" class="form-control" placeholder="Coupon Code" aria-label=""
+                                   name="coupon"
+                                   aria-describedby="basic-addon1" required>
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-success" type="submit" id="coupon-btn">Submit
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <br>
+        <br>
 
-    <div class="container text-center">
-        <a class="btn btn-outline-info btn-block" href="{% url 'order_module:complete-order' %}">Continue</a>
-    </div>
+        <div class="container text-center">
+            <a class="btn btn-outline-info btn-block" href="{% url 'order_module:complete-order' %}">Continue</a>
+        </div>
+    {% else %}
+        <p class="text-center text-danger m-5">you did not order any thing</p>
+    {% endif %}
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">

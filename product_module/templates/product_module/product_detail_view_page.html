@@ -4,10 +4,10 @@
 {% block content %}
     <div id="content-wrapper">
         <div class="column">
-            <img id=featured src="{{ object.main_image.url }}">
+            <img id=featured src="{{ object.main_image.url }}" style="width: 200px; height: 250px">
             <div id="slide-wrapper">
-                <img id="slideLeft" class="arrow" src="{% static  'img/arrow-left.png' %}"
-                     alt="{{ object.title }}">
+{#                <img id="slideLeft" class="arrow" src="{% static  'img/arrow-left.png' %}"#}
+{#                     alt="{{ object.title }}">#}
                 <div id="slider">
                     {% for detail in object.productdetail_set.all %}
                         {% if detail.image %}
@@ -16,7 +16,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <img id="slideRight" class="arrow" src="{% static 'img/arrow-right.png' %}">
+{#                <img id="slideRight" class="arrow" src="{% static 'img/arrow-right.png' %}">#}
             </div>
         </div>
         <div class="column">
@@ -64,11 +64,7 @@
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
-                    <p class="text-justify p-3 shadow mt-2">
-                        {{ object.description }}
-                    </p>
-
+                    <p class="text-justify p-3 shadow mt-2">{{ object.description }}</p>
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div class="row" id="comments">

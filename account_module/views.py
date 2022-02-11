@@ -1,5 +1,6 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from account_module.models import User
 from django.shortcuts import render, redirect
@@ -18,13 +19,22 @@ def login_view(request):
         'title': 'login',
         'login_form': login_form
     }
-    if login_form.is_valid():
-        username = login_form.cleaned_data.get('username')
-        password = login_form.cleaned_data.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-        login_form.add_error('username', 'enter you information correctly!')
+    if request.method == 'POST':
+        if login_form.is_valid():
+            email = login_form.cleaned_data.get('email')
+            password = login_form.cleaned_data.get('password')
+            user = User.objects.filter(username=email).first()
+            if user is not None:
+                if user.is_active:
+                    is_correct = user.check_password(password)
+                    if is_correct:
+                        login(request, user)
+                        return redirect(reverse('account_module:user-account'))
+                    else:
+                        login_form.add_error('email', 'email or password is incorrect')
+                login_form.add_error('email', 'your account must be active first!')
+            login_form.add_error('email', 'email or password is incorrect')
+    context = {'title': 'login', 'login_form': login_form}
     return render(request, 'account_module/login_page.html', context)
 
 
@@ -67,7 +77,7 @@ class RegisterView(View):
         return render(request, 'account_module/register_page.html', context)
 
 
-class UserAccountView(View, LoginRequiredMixin):
+class UserAccountView(LoginRequiredMixin, View):
     def get(self, request):
         context = {
             'title': 'user Account'

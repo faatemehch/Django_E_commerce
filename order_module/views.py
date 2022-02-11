@@ -10,7 +10,6 @@ from .forms import CompleteForm
 from xhtml2pdf import pisa
 import random
 import string
-import datetime
 
 
 def create_tracking_code():
@@ -54,7 +53,7 @@ class UserOpenOrder(DetailView, LoginRequiredMixin):
     template_name = 'order_module/user_open_order_list.html'
 
     def get_object(self, queryset=None):
-        open_order = get_object_or_404(Order, owner=self.request.user, is_paid=False)
+        open_order = Order.objects.filter(owner=self.request.user, is_paid=False).first()
         return open_order
 
     def get_context_data(self, **kwargs):

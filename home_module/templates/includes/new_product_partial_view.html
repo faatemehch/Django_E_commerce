@@ -1,11 +1,13 @@
-      <div class="card" style="width: 18rem;">
-                    <img src="{{ new_product.main_image.url }}" class="card-img-top" alt="{{ new_product.title }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ new_product.title }}</h5>
-                        <p class="card-text">{{ new_product.short_description }}</p>
-                    </div>
-                    <div class="row mb-2" style="margin: 0 auto;">
-                        <a href="{{ new_product.get_absolute_url }}" class="btn btn-success p-1">more Detail</a>
-                        <a href="#" class="btn btn-warning p-1">add to Favorite</a>
-                    </div>
-                </div>
+<div class="col-md-3">
+    <div class="card" style="width: 18rem;">
+        <img src="{{ new_product.main_image.url }}" class="card-img-top" alt="{{ new_product.title }}" style="width: 200px;height: 230px">
+        <div class="card-body">
+            <h5 class="card-title">{{ new_product.title }}</h5>
+            <p class="card-text">{{ new_product.short_description }}</p>
+        </div>
+        <div class="card-footer row mb-2" style="margin: 0 auto;">
+            <a href="{{ new_product.get_absolute_url }}" class="btn btn-success p-1 mr-1">more Detail</a>
+            <a href="#" class="btn btn-warning p-1">add to Favorite</a>
+        </div>
+    </div>
+</div>
