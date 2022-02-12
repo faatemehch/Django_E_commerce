@@ -1,0 +1,3 @@
+<li class="list-group-item" id="{{ category.title }}">
+    <a href="{% url 'product_module:product-list' %}?category={{ category.title|urlencode }}">{{ category.title }}</a>
+</li>

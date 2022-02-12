@@ -14,16 +14,19 @@ class ProductListView(ListView):
     paginate_by = 6
 
     def get_queryset(self):
+        print(self.request.GET)
         products = Product.objects.filter(is_active=True, is_delete=False)
-        brand = self.request.GET.get('brand')
-        category = self.request.GET.get('category')
-        if brand is not None:
-            products = products.filter(is_active=True, is_delete=False,
-                                       brand__title__exact=brand)
+        brand = self.request.GET.getlist('brand')
+        category = self.request.GET.getlist('category')
+        order = self.request.GET.getlist('order')
+        if brand:
+            products = products.filter(brand__title__in=brand)
 
-        if category is not None:
-            products = products.filter(is_active=True, is_delete=False,
-                                       category__title__exact=category)
+        if category:
+            products = products.filter(category__title__in=category)
+        if order:
+            if order == 'most-visit':
+                products.order_by('visited_count')
 
         return products
 
@@ -158,4 +161,6 @@ def product_list_by_search(request):
                  Q(category__title__icontains=query)
         search_products = Product.objects.filter(lookup).distinct()
         context['page_obj'] = search_products
+        context['brands'] = Brand.objects.all()
+        context['categories'] = Category.objects.all()
         return render(request, 'product_module/product_list_page.html', context)
