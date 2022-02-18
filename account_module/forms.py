@@ -26,7 +26,7 @@ gender_choices = (
 
 
 class RegisterForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput())
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     gender = forms.CharField(widget=forms.Select(choices=gender_choices))
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())

@@ -1,3 +1,7 @@
-<li class="list-group-item" id="{{ brand.title }}">
-    <a href="{% url 'product_module:product-list' %}?brand={{ brand.title|urlencode }}">{{ brand.title }}</a>
+{#<form method="get" class="form_">#}
+<li class="list-group-item">
+    {#        <input type="checkbox" value="{{ brand.title }}" name="{{ brand.title }}" id="{{ brand.title }}">#}
+    {#        <label>{{ brand.title }}</label>#}
+    <a href="?brand={{ brand.title|urlize }}">{{ brand.title }}</a>
 </li>
+{#</form>#}

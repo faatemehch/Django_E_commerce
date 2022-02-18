@@ -74,7 +74,7 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="?page=1&q={{ q|urlencode }}"
+                            <a class="page-link" href="?page=1"
                                aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
@@ -82,14 +82,14 @@
                         {% for page in page_obj.paginator.page_range %}
                             {% if page == page_obj.number %}
                                 <li class="page-item"><a class="page-link"
-                                                         href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
+                                                         href="?page={{ page }}">{{ page }}</a></li>
                             {% elif page > page_obj.number|add:'-2' and page < page_obj.number|add:'2' %}
                                 <li class="page-item"><a class="page-link"
-                                                         href="?page={{ page }}&q={{ q|urlencode }}">{{ page }}</a></li>
+                                                         href="?page={{ page }}">{{ page }}</a></li>
                             {% endif %}
                         {% endfor %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q|urlencode }}"
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"
                                aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
@@ -101,12 +101,16 @@
     {% endif %}
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-{#    <script type="text/javascript">#}
-{#        $('.brand li').click(function () {#}
-{#            var brand_name = this.id#}
-{#            window.location.href = "?brand=" + brand_name#}
-{#        })#}
-{##}
-{##}
-{#    </script>#}
+    <script type="text/javascript">
+        {#$(".form_cat").click(function () {#}
+            {#alert(this.id)#}
+        {#    window.location.href = "?category=" + this.id#}
+        //{#})#}
+        {#        $('.brand li').click(function () {#}
+        {#            var brand_name = this.id#}
+        {#            window.location.href = "?brand=" + brand_name#}
+        {#        })#}
+        {##}
+        {##}
+    </script>
 {% endblock %}

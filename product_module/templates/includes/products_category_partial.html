@@ -1,3 +1,7 @@
-<li class="list-group-item" id="{{ category.title }}">
-    <a href="{% url 'product_module:product-list' %}?category={{ category.title|urlencode }}">{{ category.title }}</a>
+{#<form method="get" class="form_cat">#}
+<li class="list-group-item">
+    {#        <input type="submit" value="{{ category.title }}" name="{{ category.title }}" id="{{ category.title }}">#}
+    {#        <label>{{ category.title }}</label>#}
+    <a href="?category={{ category.title|urlizetrunc:15 }}">{{ category.title }}</a>
 </li>
+{#</form>#}

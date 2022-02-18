@@ -1,7 +1,9 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse_lazy, reverse
+from django.utils.crypto import get_random_string
+from utils.email_services import EmailService
 from account_module.models import User
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView
@@ -65,12 +67,18 @@ class RegisterView(View):
             gender = register_form.cleaned_data.get('gender')
             user_exist = User.objects.filter(email=email).exists()
             if user_exist:
-                register_form.add_error(email, 'email is not valid!')
+                register_form.add_error('email', 'email is not valid!')
             else:
-                new_user = User(email=email, password=password, gender=gender, username=email)
+                active_code = get_random_string(72)
+                new_user = User(email=email, password=password, gender=gender, username=email, is_active=False,
+                                active_code=active_code)
                 new_user.set_password(password)
                 new_user.save()
-                return redirect(reverse('account_module:login'))
+                EmailService.send_email('account activation', new_user.email, {'user': new_user},
+                                        'emails/active_account.html')
+
+                return render(request, 'emails/check_email.html', {'user': new_user})
+                # return redirect(reverse('account_module:login'))
         context = {
             'register_form': register_form
         }
@@ -100,3 +108,14 @@ def edit_user_info(request):
         'user': User.objects.filter(username=request.user.username).first()
     }
     return render(request, 'account_module/user_edit_form.html', context)
+
+
+def activation_account_view(request, active_code):
+    user = User.objects.filter(active_code__iexact=active_code).first()
+    if user is not None:
+        if not user.is_active:
+            user.is_active = True
+            user.active_code = get_random_string(72)
+            user.save()
+            return redirect(reverse('account_module:login'))
+    raise Http404
