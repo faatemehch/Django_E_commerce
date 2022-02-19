@@ -24,7 +24,6 @@ urlpatterns = [
     path( 'order/', include( 'order_module.urls', namespace='order_module' ) ),
     path( 'accounts/', include( 'account_module.urls', namespace='account_module' ) ),
     path( 'contact-us/', include( 'contact_module.urls', namespace='contact_module' ) ),
-    path( '', include( 'forgot_password_module.urls' ) ),
     path( 'admin/', admin.site.urls ),
 ]
 

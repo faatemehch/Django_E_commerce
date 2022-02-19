@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'home_module',
     'contact_module',
     'order_module',
-    'forgot_password_module.apps.ForgotPasswordModuleConfig'
 ]
 
 MIDDLEWARE = [

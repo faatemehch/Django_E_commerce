@@ -38,3 +38,12 @@ class RegisterForm(forms.Form):
         if password == confirm_password:
             return confirm_password
         raise forms.ValidationError('password and it\'s repetition must be matched!')
+
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+
+
+class ResetPasswordForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())

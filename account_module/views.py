@@ -6,8 +6,8 @@ from django.utils.crypto import get_random_string
 from utils.email_services import EmailService
 from account_module.models import User
 from django.shortcuts import render, redirect
-from django.views.generic import View, CreateView
-from .forms import LoginForm, EditUserAccountModelForm, RegisterForm
+from django.views.generic import View, CreateView, FormView
+from .forms import LoginForm, EditUserAccountModelForm, RegisterForm, ResetPasswordForm, ForgotPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate
 
@@ -119,3 +119,36 @@ def activation_account_view(request, active_code):
             user.save()
             return redirect(reverse('account_module:login'))
     raise Http404
+
+
+class ForgotPasswordView(View):
+    def get(self, request):
+        forgot_pass_form = ForgotPasswordForm()
+        context = {'form': forgot_pass_form, 'title': 'forgot password'}
+        return render(request, 'account_module/forgot_password.html', context)
+
+    def post(self, request):
+        forgot_pass_form = ForgotPasswordForm(request.POST)
+        if forgot_pass_form.is_valid():
+            user_email = forgot_pass_form.cleaned_data.get('email')
+            user: User = User.objects.filter(email=user_email).first()
+            if user is not None:
+                EmailService.send_email(subject='forgot password', to=user.email, context={'user': user},
+                                        template_name='emails/forgot_password_email.html')
+            return redirect(reverse('account_module:login'))
+        context = {'form': forgot_pass_form, 'title': 'forgot password'}
+        return render(request, 'account_module/forgot_password.html', context)
+
+
+def reset_password_view(request, active_code):
+    user = User.objects.filter(active_code__iexact=active_code).first()
+    if user is not None:
+        reset_pass_form = ResetPasswordForm(request.POST or None)
+        if reset_pass_form.is_valid():
+            user_pass = reset_pass_form.cleaned_data.get('password')
+            user.set_password(user_pass)
+            user.active_code = get_random_string(72)
+            user.save()
+            return redirect(reverse('account_module:login'))
+        context = {'form': reset_pass_form, 'title': 'retrieve password'}
+        return render(request, 'account_module/reset_password.html', context)
