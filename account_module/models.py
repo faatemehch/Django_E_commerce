@@ -12,6 +12,7 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='user_image/', null=True)
     gender = models.CharField(("gender"), choices=gender_choices, max_length=10)
     active_code = models.CharField(max_length=100, null=True)
+    numeral_active_code = models.CharField(max_length=6, null=True)
 
     class Meta:
         verbose_name = 'user'

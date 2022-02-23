@@ -1,0 +1,14 @@
+{% extends 'shared/layout.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <div class="col-md-3 col-offset-5">
+        <h2 class="text-center text-danger">Activation Form</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.active_code.label_tag }}
+            {{ form.active_code }}
+            {{ form.active_code.errors }}
+            <button type="submit" class="btn-success mt-2">Send</button>
+        </form>
+    </div>
+{% endblock %}

@@ -7,9 +7,24 @@ from utils.email_services import EmailService
 from account_module.models import User
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, FormView
-from .forms import LoginForm, EditUserAccountModelForm, RegisterForm, ResetPasswordForm, ForgotPasswordForm
+from .forms import (
+    LoginForm,
+    EditUserAccountModelForm,
+    RegisterForm,
+    ResetPasswordForm,
+    ForgotPasswordForm,
+    ActivationCodeForm
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate
+import random
+
+
+def generate_integer_active_code(length=6):
+    numeral_active_code = ''
+    for _ in range(length):
+        numeral_active_code += str(random.randint(1, 9))
+    return numeral_active_code
 
 
 #  login user
@@ -69,9 +84,10 @@ class RegisterView(View):
             if user_exist:
                 register_form.add_error('email', 'email is not valid!')
             else:
-                active_code = get_random_string(72)
+                string_active_code = get_random_string(72)
+                numeral_active_code = generate_integer_active_code()
                 new_user = User(email=email, password=password, gender=gender, username=email, is_active=False,
-                                active_code=active_code)
+                                active_code=string_active_code, numeral_active_code=numeral_active_code)
                 new_user.set_password(password)
                 new_user.save()
                 EmailService.send_email('account activation', new_user.email, {'user': new_user},
@@ -112,12 +128,26 @@ def edit_user_info(request):
 
 def activation_account_view(request, active_code):
     user = User.objects.filter(active_code__iexact=active_code).first()
+    active_form = ActivationCodeForm(request.POST or None)
     if user is not None:
         if not user.is_active:
-            user.is_active = True
-            user.active_code = get_random_string(72)
-            user.save()
-            return redirect(reverse('account_module:login'))
+            if request.method == 'POST':
+                if active_form.is_valid():
+                    user_active_code = active_form.cleaned_data.get('active_code')
+                    if user.numeral_active_code == user_active_code:
+                        user.is_active = True
+                        user.active_code = get_random_string(72)
+                        user.numeral_active_code = generate_integer_active_code()
+                        user.save()
+                        return redirect(reverse('account_module:login'))
+                    else:
+                        active_form.add_error('active_code', 'activation code is wrong')
+            else:
+                context = {
+                    'form': active_form,
+                    'title': 'account activation'
+                }
+                return render(request, 'account_module/active_account_page.html', context)
     raise Http404
 
 

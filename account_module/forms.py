@@ -40,6 +40,10 @@ class RegisterForm(forms.Form):
         raise forms.ValidationError('password and it\'s repetition must be matched!')
 
 
+class ActivationCodeForm(forms.Form):
+    active_code = forms.CharField(label='active code', widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
 

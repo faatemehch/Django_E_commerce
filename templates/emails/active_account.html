@@ -1,4 +1,6 @@
 <h3 style="color: #5b80b2">Account Activation</h3>
-<p>please click the bellow link to active your account</p>
-<a href="http:localhost:8000{% url 'account_module:active_account' user.active_code %}" style="color: #993300">Activation
-    Link</a>
+<p style="color: #CC3434">please click the bellow link and enter your activation code to activate your account</p>
+<p>your activation code: {{ user.numeral_active_code }}</p>
+<a href="http:localhost:8000{% url 'account_module:active_account' user.active_code %}">
+    Activation Link
+</a>
