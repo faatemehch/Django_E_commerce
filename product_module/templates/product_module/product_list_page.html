@@ -102,15 +102,18 @@
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
-        {#$(".form_cat").click(function () {#}
-            {#alert(this.id)#}
-        {#    window.location.href = "?category=" + this.id#}
-        //{#})#}
-        {#        $('.brand li').click(function () {#}
-        {#            var brand_name = this.id#}
-        {#            window.location.href = "?brand=" + brand_name#}
-        {#        })#}
-        {##}
-        {##}
+        $('.form_cat input').change(function () {
+            var state = document.getElementById(this.id)
+            var href = window.location.href
+            console.log(document.cookie)
+            //console.log(state, state.checked, state.id, state.name)
+            if (state.checked === true) {
+                if (href.indexOf("?") > -1) {
+                    window.location.href = href + "&" + state.name + "=" + state.id;
+                } else {
+                    window.location.href = href + "?" + state.name + "=" + state.id;
+                }
+            }
+        })
     </script>
 {% endblock %}

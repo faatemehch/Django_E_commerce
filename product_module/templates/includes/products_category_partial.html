@@ -1,7 +1,7 @@
-{#<form method="get" class="form_cat">#}
-<li class="list-group-item">
-    {#        <input type="submit" value="{{ category.title }}" name="{{ category.title }}" id="{{ category.title }}">#}
-    {#        <label>{{ category.title }}</label>#}
-    <a href="?category={{ category.title|urlizetrunc:15 }}">{{ category.title }}</a>
-</li>
-{#</form>#}
+<form method="get" class="form_cat">
+    <li class="list-group-item">
+        <input type="checkbox" value="{{ category.title }}" name="category" id="{{ category.title }}">
+        <label>{{ category.title }}</label>
+        {#        <a href="?category={{ category.title }}">{{ category.title }}</a>#}
+    </li>
+</form>

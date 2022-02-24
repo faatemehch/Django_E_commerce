@@ -11,12 +11,12 @@ from django.views.generic.list import MultipleObjectMixin
 class ProductListView(ListView):
     model = Product
     template_name = 'product_module/product_list_page.html'
-    paginate_by = 2
+    paginate_by = 9
 
     def get_queryset(self):
-        print(self.request.GET)
-        print(self.kwargs)
-        print(self.request)
+        # print(self.request.GET)
+        # print(self.kwargs)
+        # print(self.request)
         products = Product.objects.filter(is_active=True, is_delete=False)
         brand = self.request.GET.getlist('brand')
         category = self.request.GET.getlist('category')
