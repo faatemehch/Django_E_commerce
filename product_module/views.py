@@ -17,6 +17,7 @@ class ProductListView(ListView):
         print(self.request.GET)
         print(self.kwargs)
         print(self.request)
+
         products = Product.objects.filter(is_active=True, is_delete=False)
         brand = self.request.GET.getlist('brand')
         category = self.request.GET.getlist('category')
@@ -29,11 +30,15 @@ class ProductListView(ListView):
         if order:
             if order == 'most-visit':
                 products.order_by('visited_count')
-
         return products
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        marca_vals = set()
+        marca_vals.update(self.request.GET.getlist('brand'))
+        marca_vals.update(self.request.GET.getlist('category'))
+        print(marca_vals)
+        context['marca_vals'] = marca_vals
         context['title'] = 'product list'
         context['brands'] = Brand.objects.all()
         context['categories'] = Category.objects.all()

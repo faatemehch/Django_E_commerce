@@ -52,24 +52,29 @@
                     {#                        {% endfor %}#}
                     {#                    </form>#}
                     {% for brand in brands %}
-                        {#                                                {% include 'includes/products_brand_partial.html' with brand=brand %}#}
-                        <li class="list-group-item">
-                            <a href="{% url 'product_module:product-list' %}?brand=
-                                    {{ brand.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ brand.title }}</a>
-                        </li>
+                        <form>
+                            {#                                                {% include 'includes/products_brand_partial.html' with brand=brand %}#}
+                            <li class="list-group-item">
+                            <input type="checkbox" {% if brand.title in marca_vals %} checked {% endif %}>
+                                <a href="{% url 'product_module:product-list' %}?brand={{ brand.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">
+                                <label>{{ brand.title }}</label></a>
+                            </li>
+                        </form>
                     {% endfor %}
                 </ul>
 
                 <ul class="dynamic_filter list-group mt-3 text-center">
-                    <li class="list-group-item active" aria-current="true">Category</li>
-                    {% for category in categories %}
-                        {#{% include 'includes/products_category_partial.html' with category=category %}#}
-                        <li class="list-group-item">
-                            <a href="{% url 'product_module:product-list' %}?category=
-                                    {{ category.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ category.title }}</a>
-                        </li>
-                        {#<li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
-                    {% endfor %}
+                    <form>
+                        <li class="list-group-item active" aria-current="true">Category</li>
+                        {% for category in categories %}
+                            {#{% include 'includes/products_category_partial.html' with category=category %}#}
+                            <li class="list-group-item">
+                                <input type="checkbox" {% if category.title in marca_vals %} checked {% endif %}>
+                                <a href="{% url 'product_module:product-list' %}?category={{ category.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ category.title }}</a>
+                            </li>
+                            </form>
+                            {#<li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
+                        {% endfor %}
                 </ul>
             </div>
         </div>
