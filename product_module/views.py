@@ -14,9 +14,9 @@ class ProductListView(ListView):
     paginate_by = 9
 
     def get_queryset(self):
-        # print(self.request.GET)
-        # print(self.kwargs)
-        # print(self.request)
+        print(self.request.GET)
+        print(self.kwargs)
+        print(self.request)
         products = Product.objects.filter(is_active=True, is_delete=False)
         brand = self.request.GET.getlist('brand')
         category = self.request.GET.getlist('category')

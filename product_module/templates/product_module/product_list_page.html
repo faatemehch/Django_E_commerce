@@ -52,16 +52,23 @@
                     {#                        {% endfor %}#}
                     {#                    </form>#}
                     {% for brand in brands %}
-                        {% include 'includes/products_brand_partial.html' with brand=brand %}
-                        {#                        <li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
+                        {#                                                {% include 'includes/products_brand_partial.html' with brand=brand %}#}
+                        <li class="list-group-item">
+                            <a href="{% url 'product_module:product-list' %}?brand=
+                                    {{ brand.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ brand.title }}</a>
+                        </li>
                     {% endfor %}
                 </ul>
 
                 <ul class="dynamic_filter list-group mt-3 text-center">
                     <li class="list-group-item active" aria-current="true">Category</li>
                     {% for category in categories %}
-                        {% include 'includes/products_category_partial.html' with category=category %}
-                        {#                        <li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
+                        {#{% include 'includes/products_category_partial.html' with category=category %}#}
+                        <li class="list-group-item">
+                            <a href="{% url 'product_module:product-list' %}?category=
+                                    {{ category.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ category.title }}</a>
+                        </li>
+                        {#<li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
                     {% endfor %}
                 </ul>
             </div>
@@ -102,18 +109,6 @@
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
-        $('.form_cat input').change(function () {
-            var state = document.getElementById(this.id)
-            var href = window.location.href
-            console.log(document.cookie)
-            //console.log(state, state.checked, state.id, state.name)
-            if (state.checked === true) {
-                if (href.indexOf("?") > -1) {
-                    window.location.href = href + "&" + state.name + "=" + state.id;
-                } else {
-                    window.location.href = href + "?" + state.name + "=" + state.id;
-                }
-            }
-        })
+
     </script>
 {% endblock %}
