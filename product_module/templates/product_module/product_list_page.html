@@ -119,21 +119,12 @@
             } else {
                 var idx = href.indexOf(state.name + "=" + state.id)
                 if (href[idx - 1] === '?') {
-                    if (href[idx + 1] === '&') {
-                        var new_href = href.split(state.name + "=" + state.id + href[idx + 1]);
-                        console.log(new_href)
-                        window.location.href = new_href[0] + new_href[1]
-                    }
-                    else {
-                        var new_href = href.split('?');
-                        window.location.href = new_href[0]
-                    }
+                    var new_href = href.split(state.name + "=" + state.id + '&')
+                    window.location.href = new_href[0] + new_href[1]
                 } else {
                     var new_href = href.split(href[idx - 1] + state.name + "=" + state.id);
-                    console.log(new_href)
-                window.location.href = new_href[0] + new_href[1]
+                    window.location.href = new_href[0] + new_href[1]
                 }
-
             }
         })
 
