@@ -40,23 +40,13 @@
                 <!-- branding -->
                 <ul class="brand list-group mt-3 text-center">
                     <li class="list-group-item active" aria-current="true">Brand</li>
-                    {#                    <form method="get" id="category-form">#}
-                    {#                        {% for brand in brands %}#}
-                    {#                            <li class="list-group-item">#}
-                    {#                                <label>{{ brand.title }}</label>#}
-                    {#                                <input class="checkbox" type="checkbox" name="{{ brand.title }}"#}
-                    {#                                       value="{{ brand.title }}">#}
-                    {#                            </li>#}
-                    {#                            <div>#}
-                    {#                            </div>#}
-                    {#                        {% endfor %}#}
-                    {#                    </form>#}
                     {% for brand in brands %}
                         <form>
                             {#                                                {% include 'includes/products_brand_partial.html' with brand=brand %}#}
                             <li class="list-group-item">
-                            <input type="checkbox" {% if brand.title in marca_vals %} checked {% endif %}>
-                                <a href="{% url 'product_module:product-list' %}?brand={{ brand.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">
+                                <input type="checkbox" {% if brand.title in marca_vals %} checked {% endif %}
+                                       name="brand" id="{{ brand.title }}">
+                                {#                                <a href="{% url 'product_module:product-list' %}?brand={{ brand.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">#}
                                 <label>{{ brand.title }}</label></a>
                             </li>
                         </form>
@@ -69,8 +59,10 @@
                         {% for category in categories %}
                             {#{% include 'includes/products_category_partial.html' with category=category %}#}
                             <li class="list-group-item">
-                                <input type="checkbox" {% if category.title in marca_vals %} checked {% endif %}>
-                                <a href="{% url 'product_module:product-list' %}?category={{ category.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ category.title }}</a>
+                                <input type="checkbox" {% if category.title in marca_vals %} checked {% endif %}
+                                       id={{ category.title }} name="category">
+                                <label>{{ category.title }}</label>
+                                {#                                <a href="{% url 'product_module:product-list' %}?category={{ category.title|urlencode }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ category.title }}</a>#}
                             </li>
                             </form>
                             {#<li class="list-group-item"><a href="#">{{ brand.title }}</a></li>#}
@@ -114,6 +106,34 @@
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
+        $('input').change(function () {
+            var state = document.getElementById(this.id)
+            var href = window.location.href
+            //console.log(state, state.checked, state.id, state.name)
+            if (state.checked === true) {
+                if (href.indexOf("?") > -1) {
+                    window.location.href = href + "&" + state.name + "=" + state.id;
+                } else {
+                    window.location.href = href + "?" + state.name + "=" + state.id;
+                }
+            } else {
+                if (href.indexOf("&") > -1) {
+                    var new_href = href.split('&')
+                    //console.log(new_href);
+                    var filteredArray = new_href.filter(e => e !== state.name + "=" + state.id)
+                    //console.log(filteredArray, filteredArray.length)
+                    var last_href = filteredArray[0]
+                    for (var i = 1; i < filteredArray.length; i++) {
+                        last_href += '&' + filteredArray[i]
+                    }
+                    //alert(last_href)
+                    window.location.href = last_href
+                } else {
+                    {#window.location.href = href + "?" + state.name + "=" + state.id;#}
+                    {#console.log(window.location.href.split(state.name + "=" + state.id))#}
+                }
+            }
+        })
 
     </script>
 {% endblock %}
