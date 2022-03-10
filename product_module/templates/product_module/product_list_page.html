@@ -117,21 +117,23 @@
                     window.location.href = href + "?" + state.name + "=" + state.id;
                 }
             } else {
-                if (href.indexOf("&") > -1) {
-                    var new_href = href.split('&')
-                    //console.log(new_href);
-                    var filteredArray = new_href.filter(e => e !== state.name + "=" + state.id)
-                    //console.log(filteredArray, filteredArray.length)
-                    var last_href = filteredArray[0]
-                    for (var i = 1; i < filteredArray.length; i++) {
-                        last_href += '&' + filteredArray[i]
+                var idx = href.indexOf(state.name + "=" + state.id)
+                if (href[idx - 1] === '?') {
+                    if (href[idx + 1] === '&') {
+                        var new_href = href.split(state.name + "=" + state.id + href[idx + 1]);
+                        console.log(new_href)
+                        window.location.href = new_href[0] + new_href[1]
                     }
-                    //alert(last_href)
-                    window.location.href = last_href
+                    else {
+                        var new_href = href.split('?');
+                        window.location.href = new_href[0]
+                    }
                 } else {
-                    {#window.location.href = href + "?" + state.name + "=" + state.id;#}
-                    {#console.log(window.location.href.split(state.name + "=" + state.id))#}
+                    var new_href = href.split(href[idx - 1] + state.name + "=" + state.id);
+                    console.log(new_href)
+                window.location.href = new_href[0] + new_href[1]
                 }
+
             }
         })
 
