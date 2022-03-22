@@ -15,7 +15,7 @@ class HomeView(View):
 
 def header(request):
     context = {
-        'brands': Brand.objects.all()
+        'brands': Brand.objects.all(),
     }
     return render(request, 'shared/header.html', context)
 

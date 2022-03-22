@@ -5,7 +5,7 @@
             <ul class="list-unstyled text-small">
                 {% for brand in brands %}
                     <li><a class="text-muted"
-                           href="{% url 'product_module:product-list-by-brand' brand_name=brand.title %}">{{ brand }}</a>
+                           href="{% url 'product_module:product-list' %}?brand={{ brand.title }}">{{ brand.title }}</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -15,7 +15,7 @@
             <ul class="list-unstyled text-small">
                 {% for category in categories %}
                     <li><a class="text-muted"
-                           href="{% url 'product_module:product-list-by-category' category.title %}">{{ category }}</a>
+                           href="{% url 'product_module:product-list' %}?category={{ category.title }}">{{ category.title }}</a>
                     </li>
                 {% endfor %}
             </ul>
