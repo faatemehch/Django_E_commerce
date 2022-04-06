@@ -7,12 +7,16 @@
             {% csrf_token %}
             {% if  user.avatar %}
                 <img src="{{ user.avatar.url }}"/>
-                  <div class="col">
+{#                <div class="col">#}
+{#                    {{ edit_form.avatar.label_tag }}#}
+{#                    {{ edit_form.avatar }}#}
+{#                </div>#}
+            {% endif %}
+            <div class="row m-2">
+                <div class="col">
                     {{ edit_form.avatar.label_tag }}
                     {{ edit_form.avatar }}
                 </div>
-            {% endif %}
-            <div class="row m-2">
                 <div class="col">
                     {{ edit_form.username.label_tag }}
                     {{ edit_form.username }}

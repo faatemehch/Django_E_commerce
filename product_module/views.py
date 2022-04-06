@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.views.generic import ListView, DetailView
 from .models import Product, ProductDetail, Category, Brand, ProductComment, Visited_Ip_product
 from django.db.models import Min, Max, Q
@@ -27,9 +27,11 @@ class ProductListView(ListView):
 
         if category:
             products = products.filter(category__title__in=category)
-        if order:
-            if order == 'most-visit':
-                products.order_by('visited_count')
+
+        # if order:
+        #     if order == 'most-visit':
+        #         products.order_by('visited_count')
+
         return products
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -43,6 +45,11 @@ class ProductListView(ListView):
         context['brands'] = Brand.objects.all()
         context['categories'] = Category.objects.all()
         return context
+
+
+def get_json_filtering(request):
+    print(request.GET)
+    return JsonResponse({'response': 'response'})
 
 
 # show products from newest to oldest
@@ -72,10 +79,22 @@ class ProductByBrand(ListView):
     def get_queryset(self, *, object_list=None, **kwargs):
         brand_name = self.kwargs.get('brand_name')
         products = Product.objects.filter(brand__title=brand_name).order_by('-added_date')
+        brand = self.request.GET.getlist('brand')
+        category = self.request.GET.getlist('category')
+        if brand:
+            products = products.filter(brand__title__in=brand)
+
+        if category:
+            products = products.filter(category__title__in=category)
+
         return products
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        marca_vals = set()
+        marca_vals.update(self.request.GET.getlist('brand'))
+        marca_vals.update(self.request.GET.getlist('category'))
+        context['marca_vals'] = marca_vals
         context['title'] = 'products by brand'
         context['brands'] = Brand.objects.all()
         context['categories'] = Category.objects.all()

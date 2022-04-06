@@ -111,17 +111,18 @@ class UserAccountView(LoginRequiredMixin, View):
 
 @login_required(login_url='account_module:login')
 def edit_user_info(request):
+    current_user = User.objects.filter(id=request.user.id).first()
     if request.method == 'POST':
-        edit_form = EditUserAccountModelForm(request.POST, request.FILES, instance=request.user)
+        edit_form = EditUserAccountModelForm(request.POST, request.FILES, instance=current_user)
         if edit_form.is_valid():
-            edit_form.save()
+            edit_form.save(commit=True)
             return redirect('account_module:user-account')
     else:
-        edit_form = EditUserAccountModelForm(instance=request.user)
+        edit_form = EditUserAccountModelForm(instance=current_user)
     context = {
         'title': 'user form',
         'edit_form': edit_form,
-        'user': User.objects.filter(username=request.user.username).first()
+        'user': current_user
     }
     return render(request, 'account_module/user_edit_form.html', context)
 
