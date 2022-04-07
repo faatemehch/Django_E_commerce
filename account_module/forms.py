@@ -16,7 +16,7 @@ class EditUserAccountModelForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'avatar' : forms.FileInput(attrs={'class': 'form-control'})
+            'avatar': forms.FileInput(attrs={'class': 'form-control'})
         }
 
 
@@ -52,3 +52,17 @@ class ForgotPasswordForm(forms.Form):
 class ResetPasswordForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+
+class ChangePasswordForm(forms.Form):
+    current_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+                                       label='current password')
+    new_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='new password')
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='confirm new password')
+
+    def clean_confirm_new_password(self):
+        new_password = self.cleaned_data.get('new_password')
+        confirm_new_password = self.cleaned_data.get('confirm_new_password')
+        if new_password == confirm_new_password:
+            return confirm_new_password
+        raise forms.ValidationError('new password and it\'s confirmation are not equal')

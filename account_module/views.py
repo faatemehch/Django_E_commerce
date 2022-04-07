@@ -6,17 +6,17 @@ from django.utils.crypto import get_random_string
 from utils.email_services import EmailService
 from account_module.models import User
 from django.shortcuts import render, redirect
-from django.views.generic import View, CreateView, FormView
+from django.views.generic import View
 from .forms import (
     LoginForm,
     EditUserAccountModelForm,
     RegisterForm,
     ResetPasswordForm,
     ForgotPasswordForm,
-    ActivationCodeForm
+    ActivationCodeForm,
+    ChangePasswordForm
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate
 import random
 
 
@@ -183,3 +183,29 @@ def reset_password_view(request, active_code):
             return redirect(reverse('account_module:login'))
         context = {'form': reset_pass_form, 'title': 'retrieve password'}
         return render(request, 'account_module/reset_password.html', context)
+
+
+class ChangePasswordView(View):
+    def get(self, request):
+        context = {
+            'form': ChangePasswordForm(),
+            'title': 'change password'
+        }
+        return render(request, 'account_module/change_password_page.html', context)
+
+    def post(self, request):
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            user: User = User.objects.filter(id=request.user.id).first()
+            if user.check_password(form.cleaned_data.get('current_password')):
+                user.set_password(form.cleaned_data.get('new_password'))
+                user.save()
+                logout(request)
+                return redirect(reverse('account_module:login'))
+            else:
+                form.add_error('current_password', 'your password is wrong')
+        context = {
+            'form': form,
+            'title': 'change password'
+        }
+        return render(request, 'account_module/change_password_page.html', context)
