@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.views.generic import ListView, DetailView
 from .models import Order, OrderDetail, Coupon, City
 from product_module.models import Product
 from django.http import JsonResponse, HttpResponse
 from .forms import CompleteForm
-from xhtml2pdf import pisa
 import random
 import string
 
@@ -51,6 +50,7 @@ def add_user_order(request):
 class UserOpenOrder(DetailView, LoginRequiredMixin):
     model = Order
     template_name = 'order_module/user_open_order_list.html'
+    context_object_name = 'order'
 
     def get_object(self, queryset=None):
         open_order = Order.objects.filter(owner=self.request.user, is_paid=False).first()
@@ -63,46 +63,47 @@ class UserOpenOrder(DetailView, LoginRequiredMixin):
 
 
 @login_required
-def delete_order_item(request, order_detail_id):
-    order_detail: OrderDetail = OrderDetail.objects.filter(id=order_detail_id).first()
-    if order_detail is not None and not order_detail.order.is_paid:
-        order_detail.product_detail.quantity += order_detail.count
-        order_detail.product_detail.save()
-        order_detail.delete()
-    return redirect('order_module:user-open-order')
-
-
-@login_required
-def decrease_item_counter(request, order_detail_id):
+def change_item_count(request):
+    print(request)
     '''
-        decrease counter of an order detail
+           delete, decrease or increase counter of an order detail
     '''
-    order_detail: OrderDetail = OrderDetail.objects.filter(id=order_detail_id).first()
-    if order_detail is not None and not order_detail.order.is_paid:
-        order_detail.product_detail.quantity += 1
-        order_detail.product_detail.save()
-        if order_detail.count == 1:
-            order_detail.delete()
+    detail_id = request.GET.get('detail_id')
+    state = request.GET.get('state')
+    if detail_id is None or state is None:
+        return JsonResponse({'status': 'detail_or_state_not_found', 'icon': 'warning'})
+    detail: OrderDetail = OrderDetail.objects.filter(id=detail_id, order__is_paid=False,
+                                                     order__owner_id=request.user.id).first()
+    if detail is None:
+        return JsonResponse({'status': 'detail_found', 'icon': 'warning'})
+    if state == 'increase':
+        if detail.product_detail.quantity > 0:
+            detail.count += 1
+            detail.save()
+            detail.product_detail.quantity -= 1
+            detail.product_detail.save()
         else:
-            order_detail.count -= 1
-            order_detail.save()
-    return redirect('order_module:user-open-order')
-
-
-@login_required
-def increase_item_counter(request, order_detail_id):
-    '''
-        decrease counter of an order detail
-    '''
-    order_detail: OrderDetail = OrderDetail.objects.filter(id=order_detail_id).first()
-    if order_detail is not None and not order_detail.order.is_paid:
-        if order_detail.product_detail.quantity == 0:
-            return redirect('order_module:user-open-order')
-        order_detail.product_detail.quantity -= 1
-        order_detail.product_detail.save()
-        order_detail.count += 1
-        order_detail.save()
-    return redirect('order_module:user-open-order')
+            return JsonResponse({'status': 'the required number is not available', 'icon': 'warning'})
+    elif state == 'decrease':
+        if detail.count == 1:
+            detail.delete()
+        else:
+            detail.count -= 1
+            detail.save()
+            detail.product_detail.quantity += 1
+            detail.product_detail.save()
+    elif state == 'all':
+        detail.product_detail.quantity += detail.count
+        detail.product_detail.save()
+        detail.delete()
+    else:
+        return JsonResponse({'status': 'invalid_state', 'icon': 'error'})
+    return JsonResponse({'success': 'successful',
+                         'icon': 'success',
+                         'body': render_to_string(
+                             template_name='order_module/includes/open_order_detail_component.html',
+                             context={'order': Order.objects.filter(owner_id=request.user.id, is_paid=False).first()})
+                         })
 
 
 @login_required

@@ -1,0 +1,68 @@
+<h5 class="text-center text-primary mt-3">Your Order({{ order.owner }})</h5>
+<div class="container">
+    <table class="table table-hover">
+        <tbody>
+        {% for order_detail in order.orderdetail_set.all %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><img src="{{ order_detail.product_detail.image.url }}" style="width: 100px;height: 100px">
+                </td>
+                <td>
+                    <a href="{{ order_detail.product.get_absolute_url }}">{{ order_detail.product.title }}</a>
+                </td>
+                <td class="text-center">{{ order_detail.product_detail.color }} |
+                    Count: {{ order_detail.count }}
+                    <br>
+                    {% if order_detail.product_detail.quantity < 1 %}
+                        <a onclick="changeOrderDetailCount({{ order_detail.id }}, 'increase')"
+                           disabled="disabled" style="cursor: pointer"><i
+                                class="fa fa-plus"
+                                style="color:red;"></i></a>
+                    {% else %}
+                        <a onclick="changeOrderDetailCount({{ order_detail.id }}, 'increase')"
+                           style="cursor: pointer"><i
+                                class="fa fa-plus"
+                                style="color:red;"></i></a>
+                    {% endif %}
+                    <a onclick="changeOrderDetailCount({{ order_detail.id }}, 'decrease')"><i
+                            class="fa fa-minus"
+                            style="color:red; cursor: pointer"></i></a>
+                </td>
+                <td>{{ order_detail.product_detail.price }} </td>
+                <td>{% widthratio order_detail.product_detail.price 1 order_detail.count %}</td>
+                <td>
+                    <a onclick="changeOrderDetailCount({{ order_detail.id }}, 'all')" class="btn" style="cursor: pointer">
+                        <i class="fa fa-trash-o" style="color:red;"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <th scope="row">#</th>
+            <td colspan="2">Total Price</td>
+            <td id="total-price">${{ order.get_total_price }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="float-left m-2 p-2">
+            <form method="post" id="coupon_form">
+                {% csrf_token %}
+                <div class="input-group m-3 p-3 shadow bg-light">
+                    <input type="text" class="form-control" placeholder="Coupon Code" aria-label=""
+                           name="coupon"
+                           aria-describedby="basic-addon1" required>
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-success" type="submit" id="coupon-btn">Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="container text-center">
+    <a class="btn btn-outline-info btn-block" href="{% url 'order_module:complete-order' %}">Continue</a>
+</div>
