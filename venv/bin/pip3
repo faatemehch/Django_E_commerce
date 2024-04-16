@@ -1,4 +1,4 @@
-#!/Users/fateme/E_commerce_application/venv/bin/python
+#!/Users/fch/Desktop/Django_E_commerce/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

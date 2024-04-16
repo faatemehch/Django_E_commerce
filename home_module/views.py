@@ -6,10 +6,11 @@ from product_module.models import Product, Brand, Category
 
 class HomeView(View):
     def get(self, request):
-        context = {'title': 'home',
-                   'sliders': Slider.objects.all(),
-                   'new_products': Product.objects.all()
-                   }
+        context = {
+            'title': 'home',
+            'sliders': Slider.objects.all(),
+            'new_products': Product.objects.all()
+        }
         return render(request, 'home_module/home_page.html', context)
 
 
